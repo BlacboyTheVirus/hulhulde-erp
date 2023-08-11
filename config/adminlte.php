@@ -330,7 +330,8 @@ return [
                                 ],
                                 [
                                     'text'  =>  'Permissions',
-                                    'url'   =>  'permissions'
+                                    'route' =>  'users.permissions.index',
+                                    'active'=>  ['users/permissions/*'],
                                 ]
                             ]
         ],
