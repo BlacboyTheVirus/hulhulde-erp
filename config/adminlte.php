@@ -326,7 +326,8 @@ return [
                                 ],
                                 [
                                     'text'  =>  'Roles',
-                                    'url'   =>  'roles'
+                                    'route' =>  'users.roles.index',
+                                    'active'=>  ['users/roles/*'],
                                 ],
                                 [
                                     'text'  =>  'Permissions',

@@ -24,7 +24,6 @@
                         <div class="form-group">
                             <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
                             <input type="text" id="name" class="form-control" name="name" placeholder="Enter Permission Name" value="{{$permission->name}}">
-                            <input type="hidden" value = {{$permission->id}} id="id" name="id">
                         </div>
                     </div>
                     <div class="card-footer">

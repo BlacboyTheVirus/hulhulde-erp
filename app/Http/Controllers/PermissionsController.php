@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Validator;
 
@@ -77,12 +78,11 @@ class PermissionsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(Request $request, Permission $permission)
     {
          //Validate name
          $validator = Validator::make($request->all(), [
-            "name" => 'required|unique:permissions,name,',
-            "id"   => 'numeric'
+            "name" => 'required|unique:permissions,name,'.$permission->id
         ]);
 
         if ($validator->fails()) {
@@ -127,7 +127,7 @@ class PermissionsController extends Controller
             ->addColumn('chkBox', function($row) use ($role_id){
                 if($row->name=="dashboard")
                 {
-                    return "<input type='checkbox' name='permission[".$row->name."]' value=".$row->name." checked onclick='return false;'>";
+                    return "<input type='checkbox' name='permission[".$row->name."]' value=".$row->name." checked onclick='return false;'> ";
                 }else{
 
                     if($role_id!="")
@@ -136,7 +136,7 @@ class PermissionsController extends Controller
                         $rolePermissions = $role->permissions->pluck('name')->toArray();
                         if(in_array($row->name, $rolePermissions))
                         {
-                            return "<input type='checkbox' name='permission[".$row->name."]' value=".$row->name." checked>";
+                            return "<input type='checkbox' name='permission[".$row->name."]' value=".$row->name." checked  class='permission'> ";
                         }
                     }
                     return "<input type='checkbox' name='permission[".$row->name."]' value=".$row->name." class='permission'>";

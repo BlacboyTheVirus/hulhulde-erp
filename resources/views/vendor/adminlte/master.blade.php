@@ -27,9 +27,9 @@
         <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
         <link rel="stylesheet" href="{{ asset('vendor/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
         <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+        
 
-        <script src="{{asset('vendor/sweetalert2/sweetalert2.all.js')}}"> </script>
-        <script src="{{asset('vendor/jquery-validation/jquery.validate.min.js')}}"> </script>
 
 
         @if(config('adminlte.google_fonts.allowed', true))
@@ -93,6 +93,8 @@
 
         <script src="{{asset('vendor/sweetalert2/sweetalert2.all.js')}}"> </script>
         <script src="{{asset('vendor/jquery-validation/jquery.validate.min.js')}}"> </script>
+       
+
         
     @else
         <script src="{{ mix(config('adminlte.laravel_mix_js_path', 'js/app.js')) }}"></script>
