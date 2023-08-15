@@ -127,10 +127,11 @@ class PermissionsController extends Controller
             ->addColumn('chkBox', function($row) use ($role_id){
                 if($row->name=="dashboard")
                 {
-                    return "<input type='checkbox' name='permission[".$row->name."]' value=".$row->name." checked onclick='return false;'> ";
+                    //force dashboard to be selected 
+                    return "<input type='checkbox' name='permission[".$row->name."]' value=".$row->name." checked onclick='return false;'> class='permission'";
                 }else{
 
-                    if($role_id!="")
+                    if( $role_id !="" )
                     {
                         $role= Role::where('id', $role_id)->first();
                         $rolePermissions = $role->permissions->pluck('name')->toArray();

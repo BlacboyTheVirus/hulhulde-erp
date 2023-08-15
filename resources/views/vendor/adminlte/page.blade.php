@@ -54,4 +54,19 @@
 @section('adminlte_js')
     @stack('js')
     @yield('js')
+
+    <script>
+        function sweetToast(title, text, icon, toast) {
+            Swal.fire({
+                title: title,
+                text: text,
+                icon: icon,
+                toast: toast,
+                timer: 3000,
+                position: 'top-end',
+                showConfirmButton: false
+             })
+        };
+
+    </script>
 @stop

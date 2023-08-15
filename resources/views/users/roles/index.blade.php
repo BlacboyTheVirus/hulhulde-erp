@@ -93,3 +93,5 @@
 @stop
 
 @section('plugins.Datatables', true)
+@section('plugins.Sweetalert2', true)
+@section('plugins.jQueryValidation', true)

@@ -186,7 +186,7 @@ return [
     |
     */
 
-    'classes_body' => '',
+    'classes_body' => 'text-sm',
     'classes_brand' => '',
     'classes_brand_text' => '',
     'classes_content_wrapper' => '',
@@ -311,7 +311,8 @@ return [
 // NAVIGATION BEGINS HERE
         [
             'text' =>   'Dashboard',
-            'url'  =>   'dashboard',
+            'route'  =>   'dashboard',
+            'active' => ['dashboard'],
             'icon' =>   'fas fa-fw fa-home'
 
         ],
@@ -322,7 +323,8 @@ return [
             'submenu'   =>  [
                                 [
                                     'text'  =>  'All',
-                                    'url'   =>  'users'
+                                    'route' =>  'users.index',
+                                    'active' => ['users'],
                                 ],
                                 [
                                     'text'  =>  'Roles',
@@ -441,8 +443,23 @@ return [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
+                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@11.7.22/dist/sweetalert2.all.min.js',
                 ],
+                [
+                    'type' => 'css',
+                    'asset' => false,
+                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@11.7.22/dist/sweetalert2.min.css',
+                ],
+            ],
+        ],
+        'jQueryValidation' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => '//cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js',
+                ]
             ],
         ],
         'Pace' => [

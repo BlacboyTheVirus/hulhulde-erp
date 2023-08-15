@@ -29,7 +29,7 @@ class RolesController extends Controller
     public function create()
     {
         $permissions = Permission::get(); 
-        return view('users.roles.create')->with(['Permissions'=> $permissions]);
+        return view('users.roles.create')->with(['permissions'=> $permissions]);
     }
 
     /**
@@ -67,9 +67,13 @@ class RolesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, Role $role)
     {
-        //
+        if($request->ajax())
+        {
+            return $this->getRolesPermissions($role);
+        }
+        return view('users.roles.show')->with(['role' => $role]);
     }
 
     /**
@@ -130,7 +134,9 @@ class RolesController extends Controller
                     $action = ""; 
                     $action.="<a class='btn btn-xs btn-success' id='btnShow' href='".route('users.roles.show', $row->id)."'><i class='fas fa-eye'></i></a> "; 
                     $action.="<a class='btn btn-xs btn-warning' id='btnEdit' href='".route('users.roles.edit', $row->id)."'><i class='fas fa-edit'></i></a>"; 
-                    $action.=" <button class='btn btn-xs btn-outline-danger' id='btnDel' data-id='".$row->id."'><i class='fas fa-trash'></i></button>"; 
+                    if($row->name != 'superuser'){ 
+                        $action.=" <button class='btn btn-xs btn-outline-danger' id='btnDel' data-id='".$row->id."'><i class='fas fa-trash'></i></button>";
+                    } 
                     return $action;
                 })
                 ->make('true');

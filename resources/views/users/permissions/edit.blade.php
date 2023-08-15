@@ -122,3 +122,6 @@
 
     </script>
 @stop
+
+@section('plugins.Sweetalert2', true)
+@section('plugins.jQueryValidation', true)
