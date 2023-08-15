@@ -128,7 +128,7 @@ class PermissionsController extends Controller
                 if($row->name=="dashboard")
                 {
                     //force dashboard to be selected 
-                    return "<input type='checkbox' name='permission[".$row->name."]' value=".$row->name." checked onclick='return false;'> class='permission'";
+                    return "<input type='checkbox' name='permission[".$row->name."]'  value=".$row->name." checked onclick='return false;' class='permission' > ";
                 }else{
 
                     if( $role_id !="" )
