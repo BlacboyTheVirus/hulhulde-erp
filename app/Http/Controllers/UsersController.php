@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\User; 
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
 class UsersController extends Controller
@@ -141,8 +142,14 @@ class UsersController extends Controller
                     $action = "";
                     if($row->name != 'Superuser'){ 
                         //$action.="<a class='btn btn-xs btn-success' id='btnShow' href='".route('users.show', $row->id)."'><i class='fas fa-eye'></i></a> ";
-                        $action.="<a class='btn btn-xs btn-warning' id='btnEdit' href='".route('users.edit', $row->id)."'><i class='fas fa-edit'></i></a>"; 
-                        $action.=" <button class='btn btn-xs btn-outline-danger' id='btnDel' data-id='".$row->id."'><i class='fas fa-trash'></i></button>"; 
+
+                        if(Auth::user()->can('users.edit')){
+                            $action.="<a class='btn btn-xs btn-warning' id='btnEdit' href='".route('users.edit', $row->id)."'><i class='fas fa-edit'></i></a>"; 
+                        }
+                        
+                        if(Auth::user()->can('users.destroy')){
+                            $action.=" <button class='btn btn-xs btn-outline-danger' id='btnDel' data-id='".$row->id."'><i class='fas fa-trash'></i></button>"; 
+                        }
                     }
                     
                     return $action;
