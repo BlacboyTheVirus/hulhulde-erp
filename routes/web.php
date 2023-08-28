@@ -2,10 +2,11 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RolesController;
-use App\Http\Controllers\UsersController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\PermissionsController;
+
+use App\Http\Controllers\Users\RolesController;
+use App\Http\Controllers\Users\UsersController;
+use App\Http\Controllers\Users\PermissionsController;
 
 
 /*
