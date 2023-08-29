@@ -26,12 +26,14 @@ Auth::routes();
 
 Route::group(['middleware' => ['auth', 'permission']], function(){
 
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
     Route::group(['prefix' => 'users', 'as' => 'users.' ], function(){
         Route::resource('permissions', PermissionsController::class);
         Route::resource('roles', RolesController::class);
     });
-    Route::resource('users', UsersController::class);   
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('users', UsersController::class);
+
 });
 
 Route::get('/', function () {
