@@ -1,0 +1,10 @@
+.card-tools {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+}
+
+table.dataTable td {
+    padding: 0.3rem 0.75rem !important;
+    vertical-align: middle !important;
+}
