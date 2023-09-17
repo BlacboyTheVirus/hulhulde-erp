@@ -8,3 +8,19 @@ table.dataTable td {
     padding: 0.3rem 0.75rem !important;
     vertical-align: middle !important;
 }
+
+.dropdown {
+    position: relative !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+}
+
+.dropdown-divider {
+    margin: 0rem 0 !important;
+}
+
+.dropdown-footer, .dropdown-header {
+    text-transform: capitalize !important;
+    padding: .5rem 0.75rem !important;
+    text-align: left !important;
+}

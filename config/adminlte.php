@@ -157,7 +157,7 @@ return [
     'layout_fixed_sidebar' => true,
     'layout_fixed_navbar' => true,
     'layout_fixed_footer' => true,
-    'layout_dark_mode' => null,
+    'layout_dark_mode' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -333,14 +333,26 @@ return [
                     'route' =>  'procurement.index',
                     'active' => ['procurement', 'procurement/create'],
                 ],
-
                 [
                     'text'  =>  'Security',
                     'route' =>  'procurement.security.index',
                     'active' => ['procurement/security/create'],
                 ],
-
-
+                [
+                    'text'  =>  'Weighbridge',
+                    'route' =>  'procurement.weighbridge.index',
+                    'active' => ['procurement/weighbridge/create'],
+                ],
+                [
+                    'text'  =>  'Quality',
+                    'route' =>  'procurement.quality.index',
+                    'active' => ['procurement/quality/create'],
+                ],
+                [
+                    'text'  =>  'Warehouse',
+                    'route' =>  'procurement.warehouse.index',
+                    'active' => ['procurement/warehouse/create'],
+                ],
 
 
             ]
@@ -443,7 +455,6 @@ return [
                 ],
             ],
         ],
-
         'DatatablesPlugins' => [
             'active' => true,
             'files' => [
@@ -493,6 +504,11 @@ return [
                     'location' => 'vendor/datatables-plugins/pdfmake/vfs_fonts.js',
                 ],
                 [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => '//cdn.datatables.net/plug-ins/1.13.4/api/sum().min.js',
+                ],
+                [
                     'type' => 'css',
                     'asset' => true,
                     'location' => 'vendor/datatables-plugins/buttons/css/buttons.bootstrap4.min.css',
@@ -502,9 +518,19 @@ return [
                     'asset' => true,
                     'location' => 'vendor/datatables-plugins/responsive/css/responsive.bootstrap4.min.css',
                 ],
+
             ],
         ],
-
+        'icheckBootstrap' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => false,
+                    'location' => '//cdnjs.cloudflare.com/ajax/libs/icheck-bootstrap/3.0.1/icheck-bootstrap.min.css',
+                ],
+            ],
+        ],
         'Datepicker' => [
             'active' => true,
             'files' => [
@@ -520,7 +546,21 @@ return [
                 ],
             ],
         ],
-
+        'Timepicker' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => '//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => false,
+                    'location' => '//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css',
+                ],
+            ],
+        ],
         'Select2' => [
             'active' => true,
             'files' => [
@@ -536,6 +576,7 @@ return [
                 ],
             ],
         ],
+
         'Chartjs' => [
             'active' => false,
             'files' => [
@@ -544,6 +585,7 @@ return [
                     'asset' => false,
                     'location' => '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js',
                 ],
+
             ],
         ],
         'Sweetalert2' => [

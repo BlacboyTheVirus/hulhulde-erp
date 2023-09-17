@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\ProcurementNext;
+use App\Enums\ProcurementStatus;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
@@ -35,7 +36,7 @@ class StoreProcurementRequest extends FormRequest
             'expected_bags'     =>  ['required', 'numeric'],
             'location'          =>  ['required'],
             'status'            =>  ['required'],
-            'next'              =>  ['required', new Enum(ProcurementNext::class)],
+            'next'              =>  ['required'],
             'user_id'           =>  ['required', 'exists:users,id'],
         ];
     }
@@ -44,8 +45,8 @@ class StoreProcurementRequest extends FormRequest
     {
         $this->merge([
             'user_id' =>  auth()->id(),
-            'status'  =>  "open",
-            'next'    =>  "security",
+            'status'  =>  ProcurementStatus::OPEN,
+            'next'    =>   ProcurementNext::SECURITY,
         ]);
     }
 

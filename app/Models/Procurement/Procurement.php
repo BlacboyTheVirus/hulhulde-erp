@@ -1,14 +1,18 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Procurement;
 
 
+
+use App\Models\Account;
+use App\Models\Input;
+use App\Models\Supplier;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Procurement extends Model
@@ -43,6 +47,39 @@ class Procurement extends Model
     {
         return $this->hasOne(Security::class);
     }
+
+    public function weighbridge(): HasOne
+    {
+        return $this->hasOne(Weighbridge::class);
+    }
+
+    public function quality(): HasOne
+    {
+        return $this->hasOne(Quality::class);
+    }
+
+    public function warehouse(): HasOne
+    {
+        return $this->hasOne(Warehouse::class);
+    }
+
+    public function account(): HasOne
+    {
+        return $this->hasOne(Account::class);
+    }
+
+    public function approval(): HasOne
+    {
+        return $this->hasOne(Approval::class);
+    }
+
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+
 
     protected function procurementDate(): Attribute
     {

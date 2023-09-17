@@ -11,23 +11,27 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('procurements', function (Blueprint $table) {
+        Schema::create('weighbridges', function (Blueprint $table) {
             $table->id();
             $table->integer('count_id')->unique();
             $table->string('code')->unique();
 
-            $table->foreignId('supplier_id')->constrained();
-            $table->foreignId('input_id')->constrained();
+            $table->foreignId('procurement_id')->constrained()->onDelete('cascade');
 
-            $table->date('procurement_date');
-            $table->decimal('expected_weight', 6, 2);
-            $table->integer('expected_bags');
-            $table->string('location');
+            $table->date('first_date');
+            $table->string('first_time');
+            $table->decimal('first_weight', 6, 2);
+
+            $table->date('second_date');
+            $table->string('second_time');
+            $table->decimal('second_weight', 6, 2);
+
+            $table->decimal('weight', 6,2);
+            $table->integer('bags');
+
+            $table->string('operator');
             $table->text('note')->nullable();
-            $table->string('status')->default('open');
 
-            $table->string('next')->default('security');
-            $table->decimal('amount', 10,2)->nullable();
             $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
@@ -38,6 +42,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('procurements');
+        Schema::dropIfExists('weighbridges');
     }
 };

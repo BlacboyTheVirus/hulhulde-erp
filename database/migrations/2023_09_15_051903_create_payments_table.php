@@ -11,26 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-
-            Schema::create('securities', function (Blueprint $table) {
+            Schema::create('payments', function (Blueprint $table) {
                 $table->id();
                 $table->integer('count_id')->unique();
                 $table->string('code')->unique();
 
                 $table->foreignId('procurement_id')->constrained()->onDelete('cascade');
-
-                $table->date('checkin_date');
-                $table->string('vehicle_no');
-                $table->string('driver');
-                $table->integer('bags');
-                $table->string('arrival_time');
-                $table->string('security');
+                $table->date('payment_date');
+                $table->string('payment_type')->default('transfer');
+                $table->decimal('amount', 10 , 2);
                 $table->text('note')->nullable();
 
                 $table->foreignId('user_id')->constrained();
                 $table->timestamps();
             });
-
     }
 
     /**
@@ -38,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('securities');
+        Schema::dropIfExists('payments');
     }
 };

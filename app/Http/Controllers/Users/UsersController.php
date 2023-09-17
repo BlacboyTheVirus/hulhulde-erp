@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Users;
 use App\Http\Controllers\Controller;
 
 use Carbon\Carbon;
-use App\Models\User; 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +16,7 @@ class UsersController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {        
+    {
         if($request->ajax())
         {
             return $this->getUsers();
@@ -37,9 +37,8 @@ class UsersController extends Controller
     public function store(Request $request, User $user)
     {
 
-       
         $this->validate($request, [
-            'name' => 'required', 
+            'name' => 'required',
             'email' => 'required|email|unique:users,email'
            // 'email' => 'required|email:rfc,dns|unique:users,email'
         ]);
@@ -47,7 +46,7 @@ class UsersController extends Controller
         if($request->has('roles'))
         {
             $user->create($request->all())->roles()->sync($request->roles);
-        }else{            
+        }else{
             $user->create($request->all());
         }
         if($user)
@@ -71,8 +70,8 @@ class UsersController extends Controller
     public function edit(User $user)
     {
         return view('users.edit', [
-            "user" => $user, 
-            "userRole" => $user->roles->pluck('name')->toArray(), 
+            "user" => $user,
+            "userRole" => $user->roles->pluck('name')->toArray(),
             "roles" => Role::latest()->get()
         ]);
     }
@@ -83,10 +82,10 @@ class UsersController extends Controller
     public function update(Request $request, User $user)
     {
         $this->validate($request, [
-            'name' => 'required', 
+            'name' => 'required',
             'email' => 'required|email|unique:users,email,'.$user->id,
-        ]); 
-        
+        ]);
+
         if($request->password != ""){
             $user->update($request->all());
         } else {
@@ -129,7 +128,7 @@ class UsersController extends Controller
                     return Carbon::parse($row->created_at)->format('d M, Y h:i:s A');
                 })
                 ->addColumn('roles', function($row){
-                    $role = ""; 
+                    $role = "";
                     if($row->roles != null)
                     {
                         foreach($row->roles as $next)
@@ -141,18 +140,18 @@ class UsersController extends Controller
                 })
                 ->addColumn('action', function($row){
                     $action = "";
-                    if($row->name != 'Superuser'){ 
+                    if($row->name != 'Superuser'){
                         //$action.="<a class='btn btn-xs btn-success' id='btnShow' href='".route('users.show', $row->id)."'><i class='fas fa-eye'></i></a> ";
 
                         if(Auth::user()->can('users.edit')){
-                            $action.="<a class='btn btn-xs btn-warning' id='btnEdit' href='".route('users.edit', $row->id)."'><i class='fas fa-edit'></i></a>"; 
+                            $action.="<a class='btn btn-xs btn-warning' id='btnEdit' href='".route('users.edit', $row->id)."'><i class='fas fa-edit'></i></a>";
                         }
-                        
+
                         if(Auth::user()->can('users.destroy')){
-                            $action.=" <button class='btn btn-xs btn-outline-danger' id='btnDel' data-id='".$row->id."'><i class='fas fa-trash'></i></button>"; 
+                            $action.=" <button class='btn btn-xs btn-outline-danger' id='btnDel' data-id='".$row->id."'><i class='fas fa-trash'></i></button>";
                         }
                     }
-                    
+
                     return $action;
                 })
                 ->rawColumns(['name', 'date','roles', 'action'])->make('true');

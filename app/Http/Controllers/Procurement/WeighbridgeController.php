@@ -4,31 +4,28 @@ namespace App\Http\Controllers\Procurement;
 
 use App\Enums\ProcurementNext;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreProcurementSecurityRequest;
+use App\Http\Requests\StoreProcurementWeighbridgeRequest;
 use App\Models\Procurement\Procurement;
-use App\Models\Procurement\Security;
+use App\Models\Procurement\Weighbridge;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
-
-class SecurityController extends Controller
+class WeighbridgeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-
         if ($request->ajax()){
             //Datatables
             return $this->getProcurements();
         }
 
-        return view('procurement.security.index' );
-
+        return view('procurement.weighbridge.index' );
     }
 
     /**
@@ -37,14 +34,14 @@ class SecurityController extends Controller
     public function create(Request $request)
     {
         //Current ID
-        $current_id = Security::max('count_id');
+        $current_id = Weighbridge::max('count_id');
         if(!$current_id) $current_id = 0;
 
         //Procurement details
         $proc = Procurement::with('supplier')->find($request->id);
         $data = [
             'count_id' => $current_id + 1,
-            'new_code' => "SC-" . str_pad($current_id + 1, 4, "0", STR_PAD_LEFT),
+            'new_code' => "WB-" . str_pad($current_id + 1, 4, "0", STR_PAD_LEFT),
             'procurement_id'  => $request->id,
             'procurement_code'=> $proc->code,
             'supplier'        => $proc->supplier->name,
@@ -52,21 +49,22 @@ class SecurityController extends Controller
             'expected_bags'   => $proc->expected_bags
         ];
 
-        return view('procurement.security.create', compact('data' ));
+        return view('procurement.weighbridge.create', compact('data' ));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProcurementSecurityRequest $request)
+    public function store(StoreProcurementWeighbridgeRequest $request)
     {
-        if ($security = Security::create($request->all())){
-            $security->procurement->next = ProcurementNext::WEIGHBRIDGE;
-            $security->procurement->save();
+        //return $request;
+        if ($weighbridge = Weighbridge::create($request->all())){
+            $weighbridge->procurement->next = ProcurementNext::QUALITY;
+            $weighbridge->procurement->save();
 
-            return response(["success"=> true, "message" => "Security Check-in created successfully."], 200);
+            return response(["success"=> true, "message" => "Weighbridge record created successfully."], 200);
         }
-        return response(["success"=> false, "message" => "Error creating Security Check-in!"], 200);
+        return response(["success"=> false, "message" => "Error creating Weighbridge record"], 200);
     }
 
     /**
@@ -101,9 +99,11 @@ class SecurityController extends Controller
         //
     }
 
+
+
     private function getProcurements(): JsonResponse
     {
-        $data = Procurement::with('supplier', 'input', 'security');
+        $data = Procurement::with('supplier', 'input', 'weighbridge');
 
         return DataTables::eloquent($data)
             ->addColumn('supplier', function (Procurement $procurement) {
@@ -124,11 +124,11 @@ class SecurityController extends Controller
             ->addColumn('action', function($row){
                 $action = "";
 
-                if ($row->next == ProcurementNext::SECURITY && !isset($row->security) ) { // If Security is next & security info not  added
-                    $action .= "<a class='btn btn-xs btn-success' href='" . route('procurement.security.create', ['id' => $row->id]) . "'><i class='fas fa-lock'></i></a> ";
+                if ($row->next == ProcurementNext::WEIGHBRIDGE && !isset($row->weighbridge) ) { // If Security is next & security info not  added
+                    $action .= "<a class='btn btn-xs btn-success' href='" . route('procurement.weighbridge.create', ['id' => $row->id]) . "'><i class='fas fa-weight'></i></a> ";
                 }
 
-                if (isset($row->security) ){ // If security info has been added
+                if (isset($row->weighbridge) ){ // If security info has been added
                     if(Auth::user()->can('users.show')){
                         $action .= "<a class='btn btn-xs btn-outline-info' id='btnShow' href='" . route('users.show', $row->id) . "'><i class='fas fa-eye'></i></a> ";
                     }
@@ -145,5 +145,4 @@ class SecurityController extends Controller
             ->rawColumns([ 'action', 'status'])
             ->make('true');
     }
-
 }

@@ -1,7 +1,13 @@
 <?php
 
+use App\Http\Controllers\Procurement\PaymentController;
 use App\Http\Controllers\Procurement\ProcurementController;
+use App\Http\Controllers\Procurement\ApprovalController;
+use App\Http\Controllers\Procurement\QualityController;
 use App\Http\Controllers\Procurement\SecurityController;
+use App\Http\Controllers\Procurement\WarehouseController;
+use App\Http\Controllers\Procurement\WeighbridgeController;
+use App\Http\Controllers\Production\ProductionController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -38,11 +44,25 @@ Route::group(['middleware' => ['auth', 'permission']], function(){
 
     Route::group(['prefix' => 'procurement', 'as' => 'procurement.' ], function(){
         Route::resource('security', SecurityController::class);
+        Route::resource('weighbridge', WeighbridgeController::class);
+        Route::resource('quality', QualityController::class);
+        Route::resource('warehouse', WarehouseController::class);
+
+        Route::resource('payment', PaymentController::class);
+
+        Route::get('approval/{approval}/edit', [ApprovalController::class, 'edit'])->name('approval.edit');
+        Route::put('approval/update', [ApprovalController::class, 'update'])->name('approval.update');
+    });
+
+    Route::group(['prefix' => 'production', 'as' => 'production.' ], function(){
+
     });
 
     Route::resource('procurement', ProcurementController::class);
-    Route::resource('users', UsersController::class);
+    Route::resource('production', ProductionController::class);
 
+
+    Route::resource('users', UsersController::class);
 
     Route::post('suppliers/getlist', [SupplierController::class, 'getlist'])->name('suppliers.getlist');
     Route::resource('suppliers', SupplierController::class);

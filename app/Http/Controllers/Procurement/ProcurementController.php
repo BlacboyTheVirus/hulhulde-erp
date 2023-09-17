@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers\Procurement;
 
+use App\Enums\ProcurementNext;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProcurementRequest;
 use App\Models\Input;
-use App\Models\Procurement;
+use App\Models\Procurement\Approval;
+use App\Models\Procurement\Procurement;
 use Carbon\Carbon;
-use App\Http\Controllers\Controller;
-use http\Env\Response;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Support\Facades\Auth;
 
 
 class ProcurementController extends Controller
@@ -56,7 +55,17 @@ class ProcurementController extends Controller
      */
     public function store(StoreProcurementRequest $request)
     {
-        if (Procurement::create($request->all())){
+        if ($procurement = Procurement::create($request->all())){
+            // Create Approval record
+            $approval = Approval::updateOrCreate(
+                [
+                    'procurement_id'=> $procurement->id,
+                    'status'        =>  false,
+                    'approval_date' =>  Carbon::now(),
+                    'user_id'       =>  auth()->id(),
+                ]
+            );
+
             return response(["success"=> true, "message" => "Procurement created successfully."], 200);
         }
         return response(["success"=> false, "message" => "Error creating Procurement!"], 200);
@@ -65,9 +74,9 @@ class ProcurementController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Procurement $procurement)
     {
-        //
+       return view('procurement.show')->with(['procurement'=>$procurement]);
     }
 
     /**
@@ -96,42 +105,64 @@ class ProcurementController extends Controller
 
     private function getProcurements(): JsonResponse
     {
-        $data = Procurement::with('supplier', 'input');
+        $data = Procurement::with('supplier', 'input', 'approval');
 
         return DataTables::eloquent($data)
-            ->addColumn('supplier', function (Procurement $procurement) {
-                return $procurement->supplier->name;
+            ->addColumn('supplier', function ($row) {
+                return $row->supplier->name;
             })
 
             ->addColumn('procurement_date', function($row){
                 return Carbon::parse($row->procurement_date)->format('d-M-Y');
             })
 
-            ->addColumn('input', function (Procurement $procurement) {
-                return $procurement->input->name;
+            ->addColumn('input', function ($row) {
+                return $row->input->name;
             })
-            ->addColumn('status', function($row){
-                return ($row->status == "open" ? "<small class='badge badge-warning'>Open</small>" : "<small class='badge badge-danger'>Closed</small>");
 
+            ->addColumn('approval', function ($row) {
+                return $row->approval->status;
             })
 
             ->addColumn('action', function($row){
                 $action = "";
 
-                $action.="<a class='btn btn-xs btn-success' id='btnShow' href='".route('users.show', $row->id)."'><i class='fas fa-eye'></i></a> ";
+                $action .= "<div class='btn-group dropdown'><button type='button' class='btn btn-info dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>Action</button> <div class='dropdown-menu'><h6 class='dropdown-header'>Actions for ".$row->code."</h6><div class='dropdown-divider'></div>";
 
-                if(Auth::user()->can('users.edit')){
-                    $action.="<a class='btn btn-xs btn-warning' id='btnEdit' href='".route('users.edit', $row->id)."'><i class='fas fa-edit'></i></a>";
+                $action .= "<a class='dropdown-item' data-id= '" . $row->id . "' href='" . route('procurement.show', $row->id). "'  ><i class= 'fas fa-eye mr-2'></i>View Procurement</a>";
+
+                if($row->next == ProcurementNext::ACCOUNT) {
+                    $action .= "<a class='dropdown-item btnApproval' data-id= '" . $row->approval->id . "' href='#'  ><i class= 'fas fa-check mr-2'></i>Approval</a>";
                 }
 
-                if(Auth::user()->can('users.destroy')){
-                    $action.=" <button class='btn btn-xs btn-outline-danger' id='btnDel' data-id='".$row->id."'><i class='fas fa-trash'></i></button>";
+                if($row->approval->status){
+                    $action .="<a class='dropdown-item'  href='". route('procurement.payment.index')."?procurement_id=".$row->id ."' ><i class='fa fa-money-bill mr-2'></i>Payments</a> <div class='dropdown-divider'></div>" ;
                 }
+
+                $action .="<a class='dropdown-item' data-id= '" . $row->id . "' href='edit/" .  $row->id . "'  ><i class= 'fas fa-edit mr-2'></i>Edit</a>";
+
+
+                $action .=" <a class='dropdown-item' onclick='delete_invoice(".$row->id.")' href='#'><i class='far fa-trash-alt mr-2 text-danger'></i>Delete</a>";
+
+                $action .="</div> </div>";
+
+
+
+
+//                $action.="<a class='btn btn-xs btn-success' id='btnShow' href='".route('procurement.show', $row->id)."'><i class='fas fa-eye'></i></a> ";
+//
+//                if(Auth::user()->can('users.edit')){
+//                    $action.="<a class='btn btn-xs btn-warning' id='btnEdit' href='".route('users.edit', $row->id)."'><i class='fas fa-edit'></i></a>";
+//                }
+//
+//                if(Auth::user()->can('users.destroy')){
+//                    $action.=" <button class='btn btn-xs btn-outline-danger' id='btnDel' data-id='".$row->id."'><i class='fas fa-trash'></i></button>";
+//                }
 
 
                 return $action;
             })
-            ->rawColumns([ 'action', 'status'])
+            ->rawColumns([ 'action', 'status', 'approval'])
             ->make('true');
     }
 }

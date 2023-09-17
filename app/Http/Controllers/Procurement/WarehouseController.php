@@ -4,31 +4,28 @@ namespace App\Http\Controllers\Procurement;
 
 use App\Enums\ProcurementNext;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreProcurementSecurityRequest;
+use App\Http\Requests\StoreProcurementWarehouseRequest;
 use App\Models\Procurement\Procurement;
-use App\Models\Procurement\Security;
+use App\Models\Procurement\Warehouse;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
-
-class SecurityController extends Controller
+class WarehouseController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-
         if ($request->ajax()){
             //Datatables
             return $this->getProcurements();
         }
 
-        return view('procurement.security.index' );
-
+        return view('procurement.warehouse.index' );
     }
 
     /**
@@ -37,36 +34,47 @@ class SecurityController extends Controller
     public function create(Request $request)
     {
         //Current ID
-        $current_id = Security::max('count_id');
+        $current_id = Warehouse::max('count_id');
         if(!$current_id) $current_id = 0;
 
         //Procurement details
-        $proc = Procurement::with('supplier')->find($request->id);
+        $proc = Procurement::with('supplier', 'warehouse', 'weighbridge', 'quality')->find($request->id);
         $data = [
             'count_id' => $current_id + 1,
-            'new_code' => "SC-" . str_pad($current_id + 1, 4, "0", STR_PAD_LEFT),
+            'new_code' => "WH-" . str_pad($current_id + 1, 4, "0", STR_PAD_LEFT),
             'procurement_id'  => $request->id,
             'procurement_code'=> $proc->code,
             'supplier'        => $proc->supplier->name,
-            'expected_weight' => $proc->expected_weight,
-            'expected_bags'   => $proc->expected_bags
+            'confirmed_weight' => $proc->weighbridge->weight - $proc->quality->rejected_weight,
+            'confirmed_bags'   => $proc->weighbridge->bags - $proc->quality->rejected_bags
         ];
 
-        return view('procurement.security.create', compact('data' ));
+        return view('procurement.warehouse.create', compact('data' ));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProcurementSecurityRequest $request)
+    public function store(StoreProcurementWarehouseRequest $request)
     {
-        if ($security = Security::create($request->all())){
-            $security->procurement->next = ProcurementNext::WEIGHBRIDGE;
-            $security->procurement->save();
 
-            return response(["success"=> true, "message" => "Security Check-in created successfully."], 200);
+        if ($warehouse = Warehouse::create($request->all())){
+            $warehouse->procurement->next = ProcurementNext::ACCOUNT;
+            $warehouse->procurement->save();
+
+            //Update Stock Level in Input
+            $initial_quantity = $warehouse->procurement->input->quantity;
+            $warehouse->procurement->input->quantity = $initial_quantity + $request->weight;
+            $warehouse->procurement->input->save();
+
+            //update Amount due on procurement
+            $warehouse->procurement->amount = $warehouse->weight * $warehouse->procurement->quality->recommended_price;
+            $warehouse->procurement->save();
+
+
+            return response(["success"=> true, "message" => "Warehouse record created successfully."], 200);
         }
-        return response(["success"=> false, "message" => "Error creating Security Check-in!"], 200);
+        return response(["success"=> false, "message" => "Error creating Warehouse record"], 200);
     }
 
     /**
@@ -101,9 +109,11 @@ class SecurityController extends Controller
         //
     }
 
+
+
     private function getProcurements(): JsonResponse
     {
-        $data = Procurement::with('supplier', 'input', 'security');
+        $data = Procurement::with('supplier', 'input', 'weighbridge', 'quality', 'warehouse');
 
         return DataTables::eloquent($data)
             ->addColumn('supplier', function (Procurement $procurement) {
@@ -112,6 +122,14 @@ class SecurityController extends Controller
 
             ->addColumn('procurement_date', function($row){
                 return Carbon::parse($row->procurement_date)->format('d-M-Y');
+            })
+
+            ->addColumn('expected_bags', function(Procurement $procurement){
+                return( ($procurement->weighbridge && $procurement->quality)  ? $procurement->weighbridge->bags - $procurement->quality->rejected_bags : $procurement->expected_bags);
+            })
+
+            ->addColumn('expected_weight', function(Procurement $procurement){
+                return( ($procurement->weighbridge && $procurement->quality) ? $procurement->weighbridge->weight - $procurement->quality->rejected_weight : $procurement->expected_weight);
             })
 
             ->addColumn('input', function (Procurement $procurement) {
@@ -124,11 +142,11 @@ class SecurityController extends Controller
             ->addColumn('action', function($row){
                 $action = "";
 
-                if ($row->next == ProcurementNext::SECURITY && !isset($row->security) ) { // If Security is next & security info not  added
-                    $action .= "<a class='btn btn-xs btn-success' href='" . route('procurement.security.create', ['id' => $row->id]) . "'><i class='fas fa-lock'></i></a> ";
+                if ($row->next == ProcurementNext::WAREHOUSE && !isset($row->warehouse) ) { // If Warehouse is next & warehouse info not  added
+                    $action .= "<a class='btn btn-xs btn-success' href='" . route('procurement.warehouse.create', ['id' => $row->id]) . "'><i class='fas fa-warehouse'></i></a> ";
                 }
 
-                if (isset($row->security) ){ // If security info has been added
+                if (isset($row->warehouse)){ // If quality info has been added
                     if(Auth::user()->can('users.show')){
                         $action .= "<a class='btn btn-xs btn-outline-info' id='btnShow' href='" . route('users.show', $row->id) . "'><i class='fas fa-eye'></i></a> ";
                     }
@@ -142,8 +160,7 @@ class SecurityController extends Controller
 
                 return $action;
             })
-            ->rawColumns([ 'action', 'status'])
+            ->rawColumns([ 'action', 'status', 'expected_weight', 'expected_bags'])
             ->make('true');
     }
-
 }
