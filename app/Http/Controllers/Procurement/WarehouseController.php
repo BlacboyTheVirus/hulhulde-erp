@@ -71,7 +71,6 @@ class WarehouseController extends Controller
             $warehouse->procurement->amount = $warehouse->weight * $warehouse->procurement->quality->recommended_price;
             $warehouse->procurement->save();
 
-
             return response(["success"=> true, "message" => "Warehouse record created successfully."], 200);
         }
         return response(["success"=> false, "message" => "Error creating Warehouse record"], 200);

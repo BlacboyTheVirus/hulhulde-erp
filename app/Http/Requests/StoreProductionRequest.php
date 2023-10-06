@@ -2,11 +2,13 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\ProductionNext;
+use App\Enums\ProductionStatus;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 
-class StoreProcurementWarehouseRequest extends FormRequest
+class StoreProductionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,16 +26,24 @@ class StoreProcurementWarehouseRequest extends FormRequest
     public function rules(): array
     {
         return [
-
+            'count_id'          =>  ['required', 'unique:productions'],
+            'code'              =>  ['required', 'unique:productions'],
+            'input_id'          =>  ['required', 'exists:inputs,id'],
+            'production_date'   =>  ['required', 'date_format:d-m-Y'],
+            'requested_weight'  =>  ['required', 'decimal:0,4'],
+            'status'            =>  ['required'],
+            'next'              =>  ['required'],
+            'user_id'           =>  ['required', 'exists:users,id'],
         ];
     }
-
 
 
     protected function prepareForValidation(): void
     {
         $this->merge([
             'user_id' =>  auth()->id(),
+            'status'  =>  ProductionStatus::OPEN,
+            'next'    =>  ProductionNext::WAREHOUSE,
         ]);
     }
 
@@ -54,5 +64,7 @@ class StoreProcurementWarehouseRequest extends FormRequest
         throw (new ValidationException($validator, $response))
             ->errorBag($this->errorBag)
             ->redirectTo($this->getRedirectUrl());
+
+
     }
 }

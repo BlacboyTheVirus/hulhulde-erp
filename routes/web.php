@@ -7,7 +7,9 @@ use App\Http\Controllers\Procurement\QualityController;
 use App\Http\Controllers\Procurement\SecurityController;
 use App\Http\Controllers\Procurement\WarehouseController;
 use App\Http\Controllers\Procurement\WeighbridgeController;
+use App\Http\Controllers\Production\OutputController;
 use App\Http\Controllers\Production\ProductionController;
+use App\Http\Controllers\Production\StoreController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -55,7 +57,9 @@ Route::group(['middleware' => ['auth', 'permission']], function(){
     });
 
     Route::group(['prefix' => 'production', 'as' => 'production.' ], function(){
-
+        Route::resource('warehouse', \App\Http\Controllers\Production\WarehouseController::class );
+        Route::resource('output', OutputController::class );
+        Route::resource('store', StoreController::class );
     });
 
     Route::resource('procurement', ProcurementController::class);

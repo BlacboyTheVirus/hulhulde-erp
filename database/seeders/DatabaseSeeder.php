@@ -3,10 +3,11 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Database\Seeders\SupplierSeeder;
 use Illuminate\Database\Seeder;
 use Database\Seeders\CreateSuperUserSeeder;
 use Database\Seeders\InputSeeder;
-use Database\Seeders\SupplierSeeder;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,6 +19,7 @@ class DatabaseSeeder extends Seeder
        $this->call([CreateSuperUserSeeder::class]);
        $this->call([InputSeeder::class]);
        $this->call([SupplierSeeder::class]);
+       $this->call([ProductSeeder::class]);
 
     }
 }

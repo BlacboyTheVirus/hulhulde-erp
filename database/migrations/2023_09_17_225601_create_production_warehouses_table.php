@@ -11,19 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('productions', function (Blueprint $table) {
+        Schema::create('production_warehouses', function (Blueprint $table) {
             $table->id();
             $table->integer('count_id')->unique();
             $table->string('code')->unique();
 
-            $table->foreignId('input_id')->constrained();
+            $table->foreignId('production_id')->constrained()->onDelete('cascade');
 
-            $table->date('production_date');
-            $table->decimal('requested_weight', 6, 2);
-            $table->text('note')->nullable();
-
-            $table->string('status')->default('open');
-            $table->string('next')->default('warehouse');
+            $table->date('release_date');
+            $table->decimal('weight', 6,2);
+            $table->string('released_by');
+            $table->text('note');
 
             $table->foreignId('user_id')->constrained();
             $table->timestamps();
@@ -35,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('productions');
+        Schema::dropIfExists('production_warehouses');
     }
 };

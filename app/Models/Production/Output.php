@@ -2,7 +2,7 @@
 
 namespace App\Models\Production;
 
-use App\Models\Input;
+use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,37 +11,28 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Production extends Model
+class Output extends Model
 {
     use HasFactory;
+    protected $table = 'production_outputs';
 
     protected $fillable = [
-        'count_id',
-        'code',
-        'input_id',
+        'production_id',
         'production_date',
-        'requested_weight',
-        'note',
-        'status',
-        'next',
+        'product_id',
+        'weight',
+        'bags',
         'user_id',
     ];
 
-    public function input():BelongsTo{
-        return $this->belongsTo(Input::class);
+    public function production():BelongsTo{
+        return $this->belongsTo(Production::class);
     }
 
-    public function warehouse():HasOne{
-        return $this->hasOne(Warehouse::class);
+    public function product():BelongsTo{
+        return $this->belongsTo(Product::class);
     }
 
-    public function outputs(): HasMany{
-        return $this->hasMany(Output::class);
-    }
-
-    public function stores(): HasMany{
-        return $this->hasMany(Store::class);
-    }
 
 
     protected function productionDate(): Attribute
@@ -51,5 +42,9 @@ class Production extends Model
             set: fn (string $value) => Carbon::parse($value)->format('Y-m-d'),
         );
     }
+
+
+
+
 
 }

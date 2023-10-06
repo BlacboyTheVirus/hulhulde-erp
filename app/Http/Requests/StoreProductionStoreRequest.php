@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 
-class StoreProcurementWarehouseRequest extends FormRequest
+class StoreProductionStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,16 +24,33 @@ class StoreProcurementWarehouseRequest extends FormRequest
     public function rules(): array
     {
         return [
-
+            'production_id'     =>  'required|exists:productions,id',
+            'received_date'     =>  'required|date_format:d-m-Y',
+            'output_id'         =>  'required',
+            'weight'            =>  'required',
+            'bags'              =>  'required',
+            'user_id'           =>  'required|exists:users,id',
         ];
     }
 
 
-
     protected function prepareForValidation(): void
     {
+
+        $bags = $this->bags;
+        $bag_weight = $this->bag_weight;
+
+        $weight=[];
+        foreach($bags as $key => $info)
+        {
+            $calculated_weight = $info * $bag_weight[$key];
+            $weight[$key] = $calculated_weight;
+        }
+
+
         $this->merge([
             'user_id' =>  auth()->id(),
+            'weight' => $weight
         ]);
     }
 

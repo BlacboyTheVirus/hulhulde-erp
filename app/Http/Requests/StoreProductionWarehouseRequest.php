@@ -2,11 +2,12 @@
 
 namespace App\Http\Requests;
 
+
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 
-class StoreProcurementWarehouseRequest extends FormRequest
+class StoreProductionWarehouseRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +25,16 @@ class StoreProcurementWarehouseRequest extends FormRequest
     public function rules(): array
     {
         return [
-
+            'count_id'          =>  'required|unique:production_warehouses',
+            'code'              =>  'required|unique:production_warehouses',
+            'production_id'     =>  'required|exists:productions,id',
+            'release_date'      =>  'required|date_format:d-m-Y',
+            'released_by'       =>  'required',
+            'weight'            =>  'required|decimal:0,4',
+            'note'              =>  'required',
+            'user_id'           =>  'required|exists:users,id',
         ];
     }
-
 
 
     protected function prepareForValidation(): void

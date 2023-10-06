@@ -157,7 +157,7 @@ return [
     'layout_fixed_sidebar' => true,
     'layout_fixed_navbar' => true,
     'layout_fixed_footer' => true,
-    'layout_dark_mode' => true,
+    'layout_dark_mode' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -354,6 +354,49 @@ return [
                     'active' => ['procurement/warehouse/create'],
                 ],
 
+
+            ]
+        ],
+
+        [
+            'text'      => 'Production',
+            'icon'      => 'fas fa-fw fa-cog',
+            'active'    => ['production/*'],
+            'submenu'   =>  [
+                [
+                    'text'  =>  'Production',
+                    'route' =>  'production.index',
+                    'active' => ['production', 'production/create'],
+                ],
+                [
+                    'text'  =>  'Warehouse',
+                    'route' =>  'production.warehouse.index',
+                    'active' => ['production/warehouse/create'],
+                ],
+                [
+                    'text'  =>  'Outputs',
+                    'route' =>  'production.output.index',
+                    'active' => ['production/output/create'],
+                ],
+                [
+                    'text'  =>  'Store',
+                    'route' =>  'production.store.index',
+                    'active' => ['production/store/create'],
+                ],
+
+            ]
+        ],
+
+        [
+            'text'      => 'Sales',
+            'icon'      => 'fas fa-fw fa-cog',
+            'active'    => ['sales/*'],
+            'submenu'   =>  [
+                [
+                    'text'  =>  'Invoice',
+                    'route' =>  'sales.invoice.index',
+                    'active' => ['sales/invoice/create'],
+                ],
 
             ]
         ],

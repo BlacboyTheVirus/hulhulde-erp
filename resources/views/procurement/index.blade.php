@@ -84,7 +84,7 @@
                         <input type="hidden" id="procurement_id"  name="procurement_id"  value="">
 
                         <div class="form-group">
-                            <label>Approval Date:</label>
+                            <label for="approval_date">Approval Date:</label>
                             <div class="input-group date" id="approval_date" data-target-input="nearest">
                                 <input type="text" class="form-control " name="approval_date" id="approval_date" placeholder="Approval Date" value="" readonly required style="background: #fff !important">
                                 <div class="input-group-append" data-target="#approval_date" data-toggle="datetimepicker">

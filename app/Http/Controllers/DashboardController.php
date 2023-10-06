@@ -2,6 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Input;
+use App\Models\Procurement\Payment;
+use App\Models\Procurement\Procurement;
+use App\Models\Procurement\Warehouse;
+use App\Models\Product;
+use App\Models\Production\Production;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -11,7 +17,17 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('dashboard');
+        $paddy_quantity = Input::where('name', 'Paddy')->pluck('quantity')->first();
+        $paddy_procured = Warehouse::sum('weight');
+        $products = Product::all();
+        $payments =Payment::sum('amount');
+
+        $procurements = Procurement::count();
+        $productions = Production::count();
+
+        $processed_paddy = \App\Models\Production\Warehouse::sum('weight');
+
+        return view('dashboard', compact('paddy_procured','paddy_quantity', 'procurements', 'products', 'payments','productions', 'processed_paddy') );
     }
 
     /**
