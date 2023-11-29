@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\Procurement\PaymentController;
 use App\Http\Controllers\Procurement\ProcurementController;
 use App\Http\Controllers\Procurement\ApprovalController;
@@ -62,11 +63,22 @@ Route::group(['middleware' => ['auth', 'permission']], function(){
         Route::resource('store', StoreController::class );
     });
 
+
+    Route::group(['prefix' => 'marketing', 'as' => 'marketing.' ], function(){
+        Route::resource('invoice', \App\Http\Controllers\Sales\InvoiceController::class );
+        Route::resource('payment', \App\Http\Controllers\Sales\PaymentController::class );
+        Route::resource('store', \App\Http\Controllers\Sales\StoreController::class );
+    });
+
     Route::resource('procurement', ProcurementController::class);
     Route::resource('production', ProductionController::class);
 
+    Route::post('customers/getlist', [CustomerController::class, 'getlist'])->name('customers.getlist');
+    Route::resource('customers', CustomerController::class);
+
 
     Route::resource('users', UsersController::class);
+
 
     Route::post('suppliers/getlist', [SupplierController::class, 'getlist'])->name('suppliers.getlist');
     Route::resource('suppliers', SupplierController::class);

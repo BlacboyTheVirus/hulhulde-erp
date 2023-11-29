@@ -21,8 +21,8 @@ class ProductSeeder extends Seeder
         $user = Product::create(
             [
                 'name'      => "Head Rice (50kg)" ,
-                'bags'      => 0,
-                'weight'    => 0,
+                'bags'      => 10,
+                'weight'    => 0.5,
                 'bag_weight'=> 0.05,
                 'price'=> 50000.00,
                 'status'    => 1,
@@ -32,8 +32,8 @@ class ProductSeeder extends Seeder
         $user = Product::create(
             [
                 'name'      => "Head Rice (25kg)" ,
-                'bags'      => 0,
-                'weight'    => 0,
+                'bags'      => 10,
+                'weight'    => 0.25,
                 'bag_weight'=> 0.025,
                 'price'=> 25000.00,
                 'status'    => 1,
@@ -43,8 +43,8 @@ class ProductSeeder extends Seeder
         $user = Product::create(
             [
                 'name'      => "Broken (50kg)" ,
-                'bags'      => 0,
-                'weight'    => 0,
+                'bags'      => 10,
+                'weight'    => 0.5,
                 'bag_weight'=> 0.05,
                 'price'=> 40000.00,
                 'status'    => 1,
@@ -55,8 +55,8 @@ class ProductSeeder extends Seeder
         $user = Product::create(
             [
                 'name'      => "Light Reject (50kg)" ,
-                'bags'      => 0,
-                'weight'    => 0,
+                'bags'      => 10,
+                'weight'    => 0.5,
                 'bag_weight'=> 0.05,
                 'price'=> 35000.00,
                 'status'    => 1,
@@ -67,8 +67,8 @@ class ProductSeeder extends Seeder
         $user = Product::create(
             [
                 'name'      => "Dark Reject (50kg)" ,
-                'bags'      => 0,
-                'weight'    => 0,
+                'bags'      => 10,
+                'weight'    => 0.5,
                 'bag_weight'=> 0.05,
                 'price'=> 32000.00,
                 'status'    => 1,

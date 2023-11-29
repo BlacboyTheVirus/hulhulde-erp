@@ -8,6 +8,7 @@ use App\Models\Procurement\Procurement;
 use App\Models\Procurement\Warehouse;
 use App\Models\Product;
 use App\Models\Production\Production;
+use App\Models\Sales\Invoice;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -25,9 +26,13 @@ class DashboardController extends Controller
         $procurements = Procurement::count();
         $productions = Production::count();
 
+        $invoices_count = Invoice::count();
+        $invoices_amount = Invoice::sum('grand_total');
+
+
         $processed_paddy = \App\Models\Production\Warehouse::sum('weight');
 
-        return view('dashboard', compact('paddy_procured','paddy_quantity', 'procurements', 'products', 'payments','productions', 'processed_paddy') );
+        return view('dashboard', compact('paddy_procured','paddy_quantity', 'procurements', 'products', 'payments','productions', 'processed_paddy', 'invoices_count', 'invoices_amount') );
     }
 
     /**

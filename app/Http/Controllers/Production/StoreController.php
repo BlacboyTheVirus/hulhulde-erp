@@ -75,17 +75,7 @@ class StoreController extends Controller
 
         }
 
-       // return $output_items;
 
-//        $old_weight=[];
-//        foreach ($output_items as $item){
-//            $old_weight = Product::find($item['product_id'])->quantity;
-//            $new_weight = $old_weight + $item['weight'];
-//            $product = Product::find($item['product_id']);
-//            $product->quantity = $new_weight;
-//            $product->save();
-//
-//          }
 
         $production = Production::find($request->production_id);
 

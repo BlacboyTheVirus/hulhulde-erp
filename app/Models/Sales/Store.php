@@ -1,41 +1,38 @@
 <?php
 
-namespace App\Models\Production;
+namespace App\Models\Sales;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Warehouse extends Model
+class Store extends Model
 {
     use HasFactory;
-    protected $table = 'production_warehouses';
+
+    protected $table = 'invoice_stores';
 
     protected $fillable = [
-        'count_id',
-        'production_id',
-        'code',
         'invoice_id',
-        'release_date',
-        'payment_type',
-        'amount',
+        'released_date',
+        'product_id',
+        'quantity',
         'weight',
         'released_by',
-        'note',
         'user_id',
     ];
 
 
 
-    public function production():BelongsTo{
-        return $this->belongsTo(Production::class);
+    public function invoice():BelongsTo{
+        return $this->belongsTo(Invoice::class);
     }
 
 
-
-    protected function releaseDate(): Attribute
+    protected function releasedDate(): Attribute
     {
         return Attribute::make(
             get: fn (string $value) => Carbon::parse($value)->format('d-m-Y'),

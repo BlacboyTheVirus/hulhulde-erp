@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Customer;
 use App\Models\Product;
-use App\Models\Sales\Customer;
 use App\Models\Supplier;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;

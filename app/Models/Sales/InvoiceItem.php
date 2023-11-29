@@ -16,6 +16,7 @@ class InvoiceItem extends Model
         'unit_price',
         'quantity',
         'unit_amount',
+        'weight',
         'created_at',
         'updated_at'
     ];

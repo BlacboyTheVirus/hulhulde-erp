@@ -21,11 +21,11 @@ return new class extends Migration
             $table->decimal('sub_total', 20, 2);
             $table->decimal('discount', 20, 2);
             $table->decimal('grand_total', 20, 2);
-            $table->decimal('amount_paid', 20, 2);
+            $table->decimal('amount_paid', 20, 2)->default(0.00);
             $table->decimal('amount_due', 20, 2);
             $table->text('note')->nullable();
-            $table->string('payment_status', 25);
-            $table->string('created_by');
+            $table->string('payment_status');
+            $table->foreignId('user_id')->constrained();
 
             $table->timestamps();
         });

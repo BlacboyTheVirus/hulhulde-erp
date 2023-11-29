@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Production;
+namespace App\Models\Sales;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -8,38 +8,36 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Warehouse extends Model
+class Payment extends Model
 {
     use HasFactory;
-    protected $table = 'production_warehouses';
+
+    protected $table = 'invoice_payments';
 
     protected $fillable = [
         'count_id',
-        'production_id',
         'code',
         'invoice_id',
-        'release_date',
+        'payment_date',
         'payment_type',
         'amount',
-        'weight',
-        'released_by',
         'note',
         'user_id',
     ];
 
 
-
-    public function production():BelongsTo{
-        return $this->belongsTo(Production::class);
+    public function invoice():BelongsTo{
+        return $this->belongsTo(Invoice::class);
     }
 
 
 
-    protected function releaseDate(): Attribute
+    protected function paymentDate(): Attribute
     {
         return Attribute::make(
             get: fn (string $value) => Carbon::parse($value)->format('d-m-Y'),
             set: fn (string $value) => Carbon::parse($value)->format('Y-m-d'),
         );
     }
+
 }

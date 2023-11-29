@@ -388,14 +388,26 @@ return [
         ],
 
         [
-            'text'      => 'Sales',
+            'text'      => 'Marketing',
             'icon'      => 'fas fa-fw fa-cog',
-            'active'    => ['sales/*'],
+            'active'    => ['marketing/*'],
             'submenu'   =>  [
                 [
                     'text'  =>  'Invoice',
-                    'route' =>  'sales.invoice.index',
-                    'active' => ['sales/invoice/create'],
+                    'route' =>  'marketing.invoice.index',
+                    'active' => ['marketing/invoice/create'],
+                ],
+
+                [
+                    'text'  =>  'Payment',
+                    'route' =>  'marketing.payment.index',
+                    'active' => ['marketing/payment/create'],
+                ],
+
+                [
+                    'text'  =>  'Store',
+                    'route' =>  'marketing.store.index',
+                    'active' => ['marketing/store/create'],
                 ],
 
             ]
@@ -478,6 +490,16 @@ return [
     */
 
     'plugins' => [
+        'NumtoWords' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'js/numtowords.js',
+                ]
+            ],
+        ],
         'Datatables' => [
             'active' => true,
             'files' => [

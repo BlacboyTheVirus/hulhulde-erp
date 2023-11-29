@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
             $table->decimal('invoice_due', 14, 2)->default(0.00);
-            $table->string('created_by');
+            $table->foreignId('user_id')->constrained();
 
             $table->timestamps();
         });

@@ -24,3 +24,13 @@ table.dataTable td {
     padding: .5rem 0.75rem !important;
     text-align: left !important;
 }
+
+
+.select2-container--default .select2-selection--single {
+    padding: 0.56875rem 0 !important;
+
+}
+
+#invoice-items {
+    border-bottom: 2px solid #dee2e6;
+}

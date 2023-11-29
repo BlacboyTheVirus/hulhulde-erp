@@ -145,9 +145,45 @@
                             </div>
                         </div>
 
+
+
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-gradient-success">
+                                <div class="inner">
+                                    <h3 class="font-weight-bold">
+                                        <span id="paddy_quantity">{{$invoices_count}}</span>
+                                    </h3>
+                                    <p>Total Invoice</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-shopping-cart"></i>
+                                </div>
+                                <a href="{{route('marketing.invoice.index')}}" class="small-box-footer">
+                                    More info <i class="fas fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                        </div>
+
+
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-orange">
+                                <div class="inner">
+                                    <h3 class="font-weight-bold">
+                                        <sup style="font-size: 20px">₦</sup>
+                                        <span id="available_paddy">{{ number_format($invoices_amount, 0,'',',') }}</span></h3>
+                                    <p>Total Invoice Amount</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-money-bill-wave-alt"></i>
+                                </div>
+                                <a href="{{route('procurement.index')}}" class="small-box-footer">
+                                    More info <i class="fas fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                        </div>
+
+
                     </div> <!-- ROW -->
-
-
 
                     <div class="row">
 
