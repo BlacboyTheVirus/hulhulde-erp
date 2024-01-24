@@ -41,7 +41,16 @@
 
                                 <tfoot>
                                 <tr>
-                                    <th colspan="9" ></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+
                                 </tr>
                                 </tfoot>
                             </table>
@@ -93,6 +102,35 @@
                     $(this).DataTable().buttons().container()
                         .appendTo( ('#top'));
                 },
+
+                drawCallback: function (json) {
+                    var api = this.api();
+                    var sum = 0;
+                    var formated = 0;
+                    //to show first th
+                    $(api.column(3).footer()).html('Total');
+
+                    sum = api.column(4, {page:'current'}).data().sum();
+                    //to format this sum
+                    unformated = parseFloat(sum).toLocaleString(undefined, {minimumFractionDigits:0});
+                    formated = parseFloat(sum).toLocaleString(undefined, {minimumFractionDigits:0});
+                    $(api.column(4).footer()).html(formated);
+
+
+                    sum = api.column(5, {page:'current'}).data().sum();
+                    //to format this sum
+                    unformated = parseFloat(sum).toLocaleString(undefined, {minimumFractionDigits:0});
+                    formated = parseFloat(sum).toLocaleString(undefined, {minimumFractionDigits:0});
+                    $(api.column(5).footer()).html( formated);
+
+                    // $('#invoice_amount').html(unformated);
+
+                    // $('#invoice_count').html(table.data().count())
+
+
+
+                },
+
             });
 
 

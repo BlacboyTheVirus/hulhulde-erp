@@ -40,6 +40,9 @@
                                         <th class="exportable">Input</th>
                                         <th class="exportable">Date</th>
                                         <th class="exportable">Requested Weight</th>
+                                        <th class="exportable">Released Weight</th>
+                                        <th class="exportable">Output Weight</th>
+
                                         <th class="exportable">Status</th>
                                         <th>Action</th>
                                     </tr>
@@ -47,7 +50,7 @@
 
                                 <tfoot>
                                 <tr>
-                                    <th colspan="6" ></th>
+                                    <th colspan="8" ></th>
                                 </tr>
                                 </tfoot>
                             </table>
@@ -84,6 +87,8 @@
                     {data:'input', name:'input.name'},
                     {data:'production_date', name:'production_date'},
                     {data:'requested_weight', name:'requested_weight'},
+                    {data:'released_weight', name:'released_weight'},
+                    {data:'output_weight', name:'output_weight'},
                     {data:'status', name:'status'},
                     {data:'action', name:'action', bSortable:false, className:"text-center"},
                 ],

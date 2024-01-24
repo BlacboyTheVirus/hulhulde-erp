@@ -389,7 +389,7 @@ return [
 
         [
             'text'      => 'Marketing',
-            'icon'      => 'fas fa-fw fa-cog',
+            'icon'      => 'fas fa-fw fa-comments-dollar',
             'active'    => ['marketing/*'],
             'submenu'   =>  [
                 [
@@ -408,6 +408,33 @@ return [
                     'text'  =>  'Store',
                     'route' =>  'marketing.store.index',
                     'active' => ['marketing/store/create'],
+                ],
+
+            ]
+        ],
+
+
+        [
+            'text'      => 'Parts',
+            'icon'      => 'fas fa-fw fa-life-ring',
+            'active'    => ['parts/*'],
+            'submenu'   =>  [
+                [
+                    'text'  =>  'Manage Parts',
+                    'route' =>  'parts.index',
+                    'active' => ['parts/index'],
+                ],
+
+                [
+                    'text'  =>  'Stock Parts',
+                    'route' =>  'parts.stocking.index',
+                    'active' => ['parts/stocking/create'],
+                ],
+
+                [
+                    'text'  =>  'Parts Usage',
+                    'route' =>  'parts.usage.index',
+                    'active' => ['parts/usage/create'],
                 ],
 
             ]

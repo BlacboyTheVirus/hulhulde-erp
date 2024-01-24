@@ -67,7 +67,7 @@ class WarehouseController extends Controller
 
     private function getProductions(): JsonResponse
     {
-        $data = Production::with( 'input');
+        $data = Production::with( 'input','warehouse');
 
         return DataTables::eloquent($data)
 
@@ -77,6 +77,10 @@ class WarehouseController extends Controller
 
             ->addColumn('input', function ($row) {
                 return $row->input->name;
+            })
+
+            ->addColumn('released_weight', function ($row) {
+                return ($row->warehouse->weight ?? '-');
             })
 
             ->addColumn('action', function($row){

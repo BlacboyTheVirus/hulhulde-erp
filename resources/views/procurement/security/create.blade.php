@@ -51,13 +51,13 @@
 
 
 
-                                <div class="col-md-3 col-sm-3 ">
-                                    <div class="description-block">
-                                        <span class="description-text">EXPECTED WEIGHT (tons)</span>
-                                        <h5 class="description-header">{{$data['expected_weight']}}</h5>
-                                    </div>
+{{--                                <div class="col-md-3 col-sm-3 ">--}}
+{{--                                    <div class="description-block">--}}
+{{--                                        <span class="description-text">EXPECTED WEIGHT (tons)</span>--}}
+{{--                                        <h5 class="description-header">{{$data['expected_weight']}}</h5>--}}
+{{--                                    </div>--}}
 
-                                </div>
+{{--                                </div>--}}
 
                             </div>
 

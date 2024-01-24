@@ -89,6 +89,7 @@ class InvoiceController extends Controller
                 $invoiceitems[$key]['product_id'] = $product_id[$key];
                 $invoiceitems[$key]['unit_price'] = $unit_price[$key];
                 $invoiceitems[$key]['quantity'] = $quantity[$key];
+                $invoiceitems[$key]['quantity_left'] = $quantity[$key];
                 $invoiceitems[$key]['unit_amount'] = $unit_amount[$key];
                 $invoiceitems[$key]['weight'] = round($product_bagweight[$key] * $quantity[$key], 2);
             }

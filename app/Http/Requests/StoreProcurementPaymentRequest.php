@@ -29,7 +29,7 @@ class StoreProcurementPaymentRequest extends FormRequest
             'procurement_id'    =>  'required|exists:procurements,id',
             'payment_date'      =>  'required|date_format:d-m-Y',
             'payment_type'      =>  'required',
-            'amount'            =>  'required|numeric',
+            'amount'            =>  'required|numeric|min:0|not_in:0',
             'note'              =>  'required',
             'user_id'           =>  'required|exists:users,id',
         ];

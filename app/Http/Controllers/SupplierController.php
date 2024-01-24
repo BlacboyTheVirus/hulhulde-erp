@@ -83,5 +83,6 @@ class SupplierController extends Controller
             );
         }
         return response()->json($response);
+        //return json_encode($response);
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Sales\Invoice;
+use App\Models\Sales\InvoiceItem;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,6 +17,7 @@ class Customer extends Model
         'phone',
         'address',
         'invoice_due',
+        'wallet',
         'created_by'
     ];
 

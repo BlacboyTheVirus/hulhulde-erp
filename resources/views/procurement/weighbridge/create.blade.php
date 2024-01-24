@@ -51,7 +51,7 @@
 
 
 
-                                <div class="col-md-3 col-sm-3 ">
+                                <div class="col-md-3 col-sm-3 hidden">
                                     <div class="description-block">
                                         <span class="description-text">EXP. WEIGHT (tons)</span>
                                         <h5 class="description-header" id="exp_weight">{{$data['expected_weight']}}</h5>

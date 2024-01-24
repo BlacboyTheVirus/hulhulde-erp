@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Sales;
 
 use App\Enums\PaymentStatus;
+use App\Enums\InvoicePaymentType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreInvoicePaymentRequest;
+use App\Models\Customer;
 use App\Models\Sales\Invoice;
 use App\Models\Sales\Payment;
 use Carbon\Carbon;
@@ -44,7 +46,11 @@ class PaymentController extends Controller
             'new_code'      =>  "PS-" . str_pad($current_id + 1, 4, "0", STR_PAD_LEFT),
         ];
 
-        //return (compact ('data', 'products'));
+
+        $customer = $invoice->customer;
+
+
+      // return (compact ('data', 'invoice', 'customer'));
         return view('marketing.payment.create', compact('data','invoice' ));
     }
 
@@ -52,19 +58,55 @@ class PaymentController extends Controller
 
     public function store(StoreInvoicePaymentRequest $request){
 
-        //return $request->all();
+      // return $request->all();
+
+
+
+
+        $customer = Customer::find($request->customer_id);
+        $amount_due = Invoice::where('id', $request->invoice_id)->value('amount_due');
+
+        $wallet_balance = $customer->wallet;
+
+        //return $wallet_balance;
+
+
+        //check if customer is Walk-in and amount is less than invoice due
+        if(   ($customer->id == 1) && ($request->amount < $amount_due) ){
+            return response(["success"=> false, "message" => "Walk-In Customer must pay in full!"], 200);
+        }
+
+
+
+        //check if payment type is wallet and its not more than available
+        if ($request->payment_type == InvoicePaymentType::WALLET && $request->amount > $wallet_balance){
+            return response(["success"=> false, "message" => "Insufficient wallet balance!"], 200);
+        }
+
 
         if ($payment = Payment::create($request->all())){
+
+            //update advanced
+            if($payment->payment_type == InvoicePaymentType::WALLET){
+
+
+                $updated_wallet = $wallet_balance - $request->amount;
+                $customer->update(['wallet' => $updated_wallet]);
+            }
+
 
             $total_paid =  $payment->invoice->amount_paid + $request->amount;
             $payment->invoice->amount_paid = $total_paid;
             $payment->invoice->amount_due = $payment->invoice->amount_due - $request->amount;
+
             if ($total_paid >= $payment->invoice->grand_total){
                 $payment->invoice->payment_status = PaymentStatus::PAID;
             } else {
                 $payment->invoice->payment_status = PaymentStatus::PARTIAL;
             }
             $payment->invoice->save();
+
+
 
             return response(["success"=> true, "message" => "Payment created successfully."], 200);
         }

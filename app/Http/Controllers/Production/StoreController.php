@@ -102,7 +102,7 @@ class StoreController extends Controller
 
     private function getProductions(): JsonResponse
     {
-        $data = Production::with( 'input');
+        $data = Production::with( 'input','warehouse', 'outputs');
 
 
         return DataTables::eloquent($data)
@@ -113,6 +113,14 @@ class StoreController extends Controller
 
             ->addColumn('input', function ($row) {
                 return $row->input->name;
+            })
+
+            ->addColumn('released_weight', function ($row) {
+                return ($row->warehouse->weight ?? 0) ;
+            })
+
+            ->addColumn('output_weight', function ($row) {
+                return ($row->outputs->sum('weight') ?? 0) ;
             })
 
             ->addColumn('action', function($row){
@@ -138,7 +146,7 @@ class StoreController extends Controller
 
                 return $action;
             })
-            ->rawColumns([ 'action', 'status'])
+            ->rawColumns([ 'action', 'status', 'output_weight'])
             ->make('true');
     }
 }

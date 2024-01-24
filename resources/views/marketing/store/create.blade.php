@@ -7,7 +7,7 @@
 @stop
 
 @section('content')
-    <div class="container-fluid">
+
         <div class="row">
             <div id="errorBox"></div>
             <div class="col-md-6">
@@ -29,7 +29,7 @@
                                 <div class="col-md-3 col-sm-3 border-right">
                                     <div class="description-block">
                                         <span class="description-text">{{$invoiceitem->product->name}}</span>
-                                        <h5 id="description-header_{{$invoiceitem->product->id}}">{{$invoiceitem->quantity}}</h5>
+                                        <h5 id="description-header_{{$invoiceitem->product->id}}">{{$invoiceitem->quantity_left}}</h5>
                                     </div>
                                 </div>
                                 @endforeach
@@ -52,6 +52,7 @@
                                             data-price="{{$product->price}}"
                                             data-available="{{$product->bags}}"
                                             data-bagweight={{ $product->bag_weight }}
+
                                     >
                                         <span class="badge bg-danger text-sm">{{$product->bags}}</span>
                                         <i class="fas fa-barcode"></i> {{$product->name}}
@@ -93,8 +94,75 @@
             </div>
 
 
+
+
+
+
+
+
+<div class="col-md-6">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">
+                <h5>Products Release History</h5>
+            </div>
+        </div>
+        <div class="card-body">
+            <!--DataTable-->
+            <div class="table-responsive">
+                <table id="tblData" class="table table-bordered table-striped dataTable dtr-inline">
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Product</th>
+                        <th>Quantity Released</th>
+                        <th>Released by</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    @foreach($releases as $release)
+
+
+                        <tr>
+                            <td>{{\Carbon\Carbon::parse($release->released_date)->format('d-M-Y')}}</td>
+                            <td>{{\App\Models\Product::where('id','=', $release->product_id)->value('name')}}</td>
+                            <td>{{$release->quantity}}</td>
+                            <td>{{$release->released_by}}</td>
+                        </tr>
+
+                    @endforeach
+
+                    </tbody>
+
+
+                    <tfoot>
+                    <tr>
+                        <th></th>
+                        <th>Total</th>
+                        <th>{{$releases->sum('quantity')}}</th>
+                        <th></th>
+
+                    </tr>
+                    </tfoot>
+
+
+                </table>
+            </div>
         </div>
     </div>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+
 @stop
 
 @section('css')
@@ -120,6 +188,8 @@
                 var output_name = $(this).attr('data-name');
                 var output_bag_weight = $(this).attr('data-bagweight');
                 var available = $(this).attr('data-available');
+                var quantity_left = $('#description-header_'+ output_id).text();
+
 
 
                 // insert the input field
@@ -132,7 +202,7 @@
                                         <div class="input-group-text">${output_name}</div>
                                     </div>
 
-                                    <input type="number" class="form-control col-md-12" name="quantity[]" id="quantity_${count}" placeholder="Bags" value="" required data-available=${available} data-product= "${output_id}" >
+                                    <input type="number" class="form-control col-md-12" name="quantity[]" id="quantity_${count}" placeholder="Bags" value="" required data-available=${available} data-product= "${output_id}" max=${quantity_left}  min=1>
 
 <input type="hidden"  name="bag_weight[]"  value=${output_bag_weight}  id="bag_weight_${output_id}" >
 
@@ -146,11 +216,15 @@
                             </div>
                 `;
 
-                $('#output-items').append(output_item);
 
-                //disable button
-                //$(this).prop('disabled', true);
-                $(this).hide();
+                if (quantity_left > 0){
+                    $('#output-items').append(output_item);
+
+                    //disable button
+                    //$(this).prop('disabled', true);
+                    $(this).hide();
+                }
+
             });
 
 
@@ -192,14 +266,17 @@
                 var errors = false;
 
                 $("[name^=bags]").each(function(){
-                    if( ($(this).val() === '') || ($(this).val() === '0') || ($(this).val() > $(this).attr('data-available'))){
+                    if( ($(this).val() === '')
+                        || ($(this).val() === '0')
+                        || ($(this).val() > $(this).attr('data-available'))
+                    ){
                         $(this).addClass('is-invalid');
                         errors = true;
                     }
 
                     var product = $(this).attr('data-product')
 
-                    if( ($(this).val() >   $('#description-header_'+ product).text()   ) ){
+                    if( ($(this).val() >  $('#description-header_'+ product).text()   ) ){
                         $(this).addClass('is-invalid');
                         errors = true;
                     }
@@ -207,6 +284,8 @@
 
 
                 });
+
+
 
                  if(errors) {
                      sweetToast('', 'Sorry, invalid value in field marked red.', 'error', true);

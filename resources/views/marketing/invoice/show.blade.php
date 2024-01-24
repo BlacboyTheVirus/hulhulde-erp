@@ -130,7 +130,7 @@
 
 
                     <div class="row">
-                        <div class=" order-2 order-sm-1 p-2 col-md-5">
+                        <div class=" order-2 order-sm-2 p-2 col-md-5">
 
                             <h3 class="card-title lead mb-2 font-weight-bold">Payment Details</h3>
 
@@ -155,12 +155,88 @@
 
                                         @foreach ($invoice->payments as $key => $payment)
                                         <tr>
-                                            <td> {{ $key }}</td>
-                                            <td>{{ $payment->date }}</td>
-                                            <td>{{ $payment->type }}</td>
+                                            <td> {{ $key+1 }}</td>
+                                            <td>{{ $payment->payment_date }}</td>
+                                            <td>{{ $payment->payment_type }}</td>
                                             <td>{{ $payment->note }}</td>
                                             <td class="text-right pr-3">{{ $payment->amount }} </td>
                                         </tr>
+                                        @endforeach
+                                    @endif
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+
+                            <h3 class="card-title lead mb-2 font-weight-bold">Release Details</h3>
+
+                            <div class="table table-responsive ">
+                                <table class="table text-nowrap table-condensed table-bordered table-hover">
+                                    <thead>
+                                    <tr class="bg-gray-light">
+                                        <th>#</th>
+                                        <th>Date</th>
+                                        <th>Product</th>
+                                        <th class="text-center" width="30%">Quantity</th>
+                                        <th class="text-center">Released By</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    @if(!$invoice->stores)
+                                        <tr>
+                                            <td colspan="5"> No release detail for invoice yet.</td>
+                                        </tr>
+                                    @else
+
+                                        @foreach ($invoice->stores as $key => $store)
+                                            <tr>
+                                                <td> {{ $key+1 }}</td>
+                                                <td>{{ $store->released_date }}</td>
+                                                <td>{{ \App\Models\Product::where('id','=', $store->product_id)->value('name') }}</td>
+                                                <td>{{ $store->quantity }}</td>
+                                                <td class="text-right pr-3">{{ $store->released_by }} </td>
+                                            </tr>
+                                        @endforeach
+                                    @endif
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+
+                            <h3 class="card-title lead mb-2 font-weight-bold">Outstanding Products</h3>
+
+                            <div class="table table-responsive ">
+                                <table class="table text-nowrap table-condensed table-bordered table-hover">
+                                    <thead>
+                                    <tr class="bg-gray-light">
+                                        <th>#</th>
+                                        <th>Product</th>
+                                        <th class="text-center" width="30%">Quantity</th>
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    @if(!count($invoice->invoiceitems->where('quantity_left', '>', 0) ) > 0)
+                                        <tr>
+                                            <td colspan="5"> No outstanding detail for invoice yet.</td>
+                                        </tr>
+                                    @else
+
+                                        @foreach ($invoice->invoiceitems as $key => $item)
+                                            <tr>
+                                                <td> {{ $key+1 }}</td>
+                                                <td>{{ \App\Models\Product::where('id','=', $item->product_id)->value('name') }}</td>
+                                                <td>{{ $item->quantity_left }}</td>
+
+                                            </tr>
                                         @endforeach
                                     @endif
 
@@ -175,7 +251,7 @@
 
                         </div>
 
-                        <div class=" order-1 order-sm-2 p-2  col-md-5 offset-2">
+                        <div class="  order-1 order-sm-1 p-2  col-md-5 offset-7">
 
 
                             <div class="table-responsive">

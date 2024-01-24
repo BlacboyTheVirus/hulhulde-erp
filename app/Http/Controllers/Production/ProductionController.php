@@ -100,7 +100,7 @@ class ProductionController extends Controller
 
     private function getProductions(): JsonResponse
     {
-        $data = Production::with( 'input');
+        $data = Production::with( 'input', 'warehouse', 'outputs');
 
         return DataTables::eloquent($data)
 
@@ -111,6 +111,16 @@ class ProductionController extends Controller
             ->addColumn('input', function ($row) {
                 return $row->input->name;
             })
+
+
+            ->addColumn('released_weight', function ($row) {
+                return ($row->warehouse->weight ?? '-');
+            })
+
+            ->addColumn('output_weight', function ($row) {
+                return ($row->outputs->sum('weight') ?? 0) ;
+            })
+
 
             ->addColumn('action', function($row){
                 $action = "";

@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreInvoiceStoreRequest;
 use App\Models\Product;
 use App\Models\Sales\Invoice;
+use App\Models\Sales\InvoiceItem;
+use App\Models\Sales\Store;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -20,6 +22,7 @@ class StoreController extends Controller
             //Datatables for All Invoices
             return  $this->getInvoices();
         }
+
 
         return view('marketing.store.index' );
     }
@@ -39,6 +42,10 @@ class StoreController extends Controller
             'invoice_date'=> $invoice->production_date,
         ];
 
+        //invoice release details
+        $releases = Invoice::with('stores')->find($invoice->id)->stores;
+
+
         //return $invoice;
 
 //        $invoiceitems = DB::table('production_outputs')
@@ -48,7 +55,7 @@ class StoreController extends Controller
 //            ->get();
 
 
-        return view('marketing.store.create', compact('data','invoice', 'products' ));
+        return view('marketing.store.create', compact('data','invoice', 'products', 'releases' ));
     }
 
 
@@ -70,22 +77,32 @@ class StoreController extends Controller
 
         }
 
-        //return $product_items;
+      //return $product_items;
 
         $invoice = Invoice::find($request->invoice_id);
 
 
 
         if ($stores = $invoice->stores()->createMany($product_items)) { // changed from createMany
-//            $production->next = ProductionNext::STORE;
-//            $production->save();
 
-            //    update product stock
+            //update product stock
             foreach ($stores as $store) {
                 $product = Product::find($store->product_id);
                 $product->weight = $product->weight - $store->weight;
                 $product->bags = $product->bags - $store->quantity;
                 $product->save();
+
+            }
+
+
+            //update invoice_items quantity_left to collect
+            $all = [];
+            foreach ($stores as $store) {
+                $invoice_item = InvoiceItem::where(['invoice_id' => $store->invoice_id, 'product_id' => $store->product_id ])->get();
+                foreach($invoice_item as $item){
+                    $item->quantity_left = $item->quantity_left - $store->quantity;
+                    $item->save();
+                }
             }
             return response(["success" => true, "message" => "Store records created successfully."], 200);
         }
@@ -109,13 +126,13 @@ class StoreController extends Controller
             ->addColumn('action', function($row){
                 $action = "";
 
-                if ( (count($row->stores) == 0) &&  ($row->payment_status == PaymentStatus::PAID)  ) {
+                if ( (count($row->stores) >= 0) &&  ($row->payment_status != PaymentStatus::UNPAID)  ) {
                     $action .= "<a class='btn btn-xs btn-success' href='" . route('marketing.store.create', ['id' => $row->id]) . "'><i class='fas fa-box-open'></i></a> ";
                 }
 
-                if ( (count($row->stores) > 0)  ){
-                    $action .= " DISPATCHED ";
-                }
+//                if ( (count($row->stores) > 0)  ){
+//                    $action .= " DISPATCHED ";
+//                }
 
 
                 return $action;
@@ -123,6 +140,10 @@ class StoreController extends Controller
             ->rawColumns([ 'action'])
             ->make('true');
     }
+
+
+
+
 
 
 }

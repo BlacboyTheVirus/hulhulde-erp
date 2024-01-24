@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\Parts\PartController;
 use App\Http\Controllers\Procurement\PaymentController;
 use App\Http\Controllers\Procurement\ProcurementController;
 use App\Http\Controllers\Procurement\ApprovalController;
@@ -69,6 +70,16 @@ Route::group(['middleware' => ['auth', 'permission']], function(){
         Route::resource('payment', \App\Http\Controllers\Sales\PaymentController::class );
         Route::resource('store', \App\Http\Controllers\Sales\StoreController::class );
     });
+
+
+    Route::group(['prefix' => 'parts', 'as' => 'parts.' ], function(){
+        Route::resource('stocking', \App\Http\Controllers\Parts\StockingController::class );
+        Route::resource('usage', \App\Http\Controllers\Parts\UsageController::class );
+
+    });
+
+
+    Route::resource('parts', PartController::class);
 
     Route::resource('procurement', ProcurementController::class);
     Route::resource('production', ProductionController::class);

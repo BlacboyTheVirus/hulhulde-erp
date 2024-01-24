@@ -3,90 +3,20 @@
 @section('title', 'Payments  | Dashboard')
 
 @section('content_header')
-    <h1>Payments for Procurement {{$data['procurement_code']}}</h1>
+    <h1>Enter Details for New Parts {{$data['new_code']}}</h1>
 @stop
 
 @section('content')
     <div class="container-fluid">
 
-        <div class="row">
-            <div class="col-md-12">
-
-                <div class="card card-info card-outline">
 
 
-                    <div class="card-body">
-
-                        <div class="row mb-3">
-
-
-                            <div class="col-md-3 col-sm-3 border-right">
-                                <div class="description-block">
-                                    <span class="description-text">SUPPLIER</span>
-                                    <h5 class="description-header">{{$supplier->name}}</h5>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="col-md-3 col-sm-3 border-right">
-                                <div class="description-block">
-                                    <span class="description-text">PROCUREMENT VALUE</span>
-                                    <h5 class="description-header">
-                                        ₦ {{ number_format( $procurement->warehouse->weight * $procurement->quality->recommended_price, 0,'.',',') }}</h5>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="col-md-2 col-sm-2 border-right">
-                                <div class="description-block">
-                                    <span class="description-text">TOTAL PAID</span>
-                                    <h5 class="description-header">
-                                        ₦ {{ number_format($procurement->payments->sum('amount'), 0,'.',',') }}</h5>
-                                </div>
-
-                            </div>
-
-
-                            <div class="col-md-2 col-sm-2 border-right">
-                                <div class="description-block">
-                                    <span class="description-text">AMOUNT DUE</span>
-                                    <h5 class="description-header">
-                                        ₦ {{ number_format($procurement->warehouse->weight * $procurement->quality->recommended_price - $procurement->payments->sum('amount'), 0,'.',',')  }}</h5>
-                                </div>
-
-                            </div>
-
-
-                            <div class="col-md-2 col-sm-2 ">
-                                <div class="description-block">
-                                    <span class="description-text">ADVANCE AVAILABLE</span>
-                                    <h5 class="description-header">
-                                        ₦ {{ number_format($supplier->advance , 0,'.',',')}}</h5>
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-                    </div> <!-- Card body -->
-
-                </div>
-            </div>
-
-        </div>
 
 
         <div class="row">
             <div id="errorBox"></div>
-
-
             <div class="col-3">
-                <form method="POST" action="{{route('procurement.payment.store')}}" id="newform">
+                <form method="POST" action="{{route('parts.store')}}" id="newform">
                     @csrf
                     <div class="card">
                         <div class="card-header">
@@ -97,10 +27,6 @@
 
                         <input type="hidden" id="count_id" name="count_id" value={{$data['count_id']}}>
                         <input type="hidden" id="code" name="code" value="{{$data['new_code']}}">
-                        <input type="hidden" id="procurement_id" name="procurement_id"
-                               value="{{$data['procurement_id']}}">
-                        <input type="hidden" id="supplier_id" name="supplier_id" value="{{$supplier->id}}">
-                        <input type="hidden" id="advance" name="advance" value="{{ $supplier->advance}}">
 
 
                         <div class="card-body">
@@ -116,20 +42,20 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="payment_type" class="form-label">Payment Type</label>
-                                <select class="form-control select2" id="payment_type" data-placeholder="Payment Type"
-                                        name="payment_type">
-                                    <option value="">--Select Payment Type--</option>
-                                    @foreach(\App\Enums\ProcurementPaymentType::getValues() as $payment_type)
-                                        @if($payment_type == \App\Enums\ProcurementPaymentType::ADVANCE && $supplier->advance == 0)
+{{--                            <div class="form-group">--}}
+{{--                                <label for="payment_type" class="form-label">Payment Type</label>--}}
+{{--                                <select class="form-control select2" id="payment_type" data-placeholder="Payment Type"--}}
+{{--                                        name="payment_type">--}}
+{{--                                    <option value="">--Select Payment Type--</option>--}}
+{{--                                    @foreach(\App\Enums\InvoicePaymentType::getValues() as $payment_type)--}}
+{{--                                        @if( ($payment_type == \App\Enums\InvoicePaymentType::WALLET) && ($invoice->customer->wallet == 0) )--}}
 
-                                        @else
-                                            <option value="{{$payment_type}}">{{ucfirst($payment_type)}}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            </div>
+{{--                                        @else--}}
+{{--                                            <option value="{{$payment_type}}">{{ucfirst($payment_type)}}</option>--}}
+{{--                                        @endif--}}
+{{--                                    @endforeach--}}
+{{--                                </select>--}}
+{{--                            </div>--}}
 
                             <div class="form-group">
                                 <label for="amount" class="form-label">Amount <span class="text-danger">*</span></label>
@@ -153,7 +79,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">
-                            <h5>List</h5>
+                            <h5>Parts List</h5>
                         </div>
                     </div>
                     <div class="card-body">
@@ -162,10 +88,11 @@
                             <table id="tblData" class="table table-bordered table-striped dataTable dtr-inline">
                                 <thead>
                                 <tr>
-                                    <th>Payment Code</th>
-                                    <th>Amount</th>
-                                    <th>Payment Type</th>
-                                    <th>Payment Date</th>
+                                    <th>Parts Code</th>
+                                    <th>Name</th>
+                                    <th>Quantity</th>
+                                    <th>Unit</th>
+                                    <th>Restock Level</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -173,7 +100,8 @@
 
                                 <tfoot>
                                 <tr>
-                                    <th>Total</th>
+                                    <th></th>
+                                    <th></th>
                                     <th></th>
                                     <th></th>
                                     <th></th>
@@ -259,13 +187,13 @@
             $('#save').click(function (e) {
                 e.preventDefault();
 
-                if (($('#payment_type').val() === 'advance') && ($('#amount').val() > $('#advance').val())) {
-                    sweetToast('', 'Sorry, Insufficient advance.', 'error', true);
+
+                if (!formvalidator.form()) {
                     return false;
                 }
 
-
-                if (!formvalidator.form()) {
+                if (($('#payment_type').val() === 'advance') && ($('#amount').val() > $('#wallet').val())) {
+                    sweetToast('', 'Sorry, Insufficient Wallet Balance.', 'error', true);
                     return false;
                 }
 
@@ -275,18 +203,19 @@
 
                 $.ajax({
                     type: "POST",
-                    url: '{{ route('procurement.payment.store') }}',
+                    url: '{{ route('parts.store') }}',
                     data: formData,
                     dataType: "json",
                     encode: true,
                     success: function (response) {
                         if (response.success) {
-                            $("#tblData").DataTable().ajax.reload();
-                            $('#newform').trigger('reset');
+                            // $("#tblData").DataTable().ajax.reload();
+                            // $('#newform').trigger('reset');
                             sweetToast('', response.message, 'success', true);
                             setTimeout(() => {
                                 window.location.href = '{{url()->full()}}';
                             }, 1000);
+
                         } else {
                             sweetToast('', response.message, 'error', true);
                         }
@@ -304,17 +233,13 @@
 
             var table = $('#tblData').DataTable({
                 reponsive: true, processing: true, serverSide: true, autoWidth: false,
-                ajax: "{{route('procurement.payment.index',['procurement_id'=>$data['procurement_id']] )}}",
+                ajax: "{{route('parts.index' )}}",
                 columns: [
                     {data: 'code', name: 'code'},
-                    {
-                        data: 'amount', name: 'amount',
-                        "render": function (data, type, row, meta) {
-                            return (parseFloat(data).toLocaleString(undefined, {minimumFractionDigits: 2}));
-                        }
-                    },
-                    {data: 'payment_type', name: 'payment_type'},
-                    {data: 'payment_date', name: 'payment_date'},
+                    {data: 'name', name: 'name'},
+                    {data: 'quantity', name: 'quantity'},
+                    {data: 'unit', name: 'unit'},
+                    {data: 'restock_level', name: 'restock_level'},
                     {data: 'action', name: 'action', bSortable: false, className: "text-center"},
 
                 ],
@@ -371,12 +296,6 @@
 
             $(document).on('select2:open', () => {
                 document.querySelector('.select2-search__field').focus();
-            });
-
-            $('#payment_type').on('change', function () {
-                if ($(this).val() == 'advance') {
-                    // alert ('advance');
-                }
             });
 
             //Date picker

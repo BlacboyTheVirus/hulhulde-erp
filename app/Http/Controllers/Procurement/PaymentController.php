@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Procurement;
 
+use App\Enums\ProcurementPaymentType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProcurementPaymentRequest;
 use App\Models\Procurement\Payment;
 use App\Models\Procurement\Procurement;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
@@ -22,20 +24,42 @@ class PaymentController extends Controller
         //Current ID
         $current_id = Payment::max('count_id');
         if(!$current_id) $current_id = 0;
+
+
+       $procurement  = Procurement::find($request->procurement_id);
+       $supplier = $procurement->supplier;
+
         $data = [
             'count_id' => $current_id + 1,
             'new_code' => "PY-" . str_pad($current_id + 1, 4, "0", STR_PAD_LEFT),
-            'procurement_id'  => $request->procurement_id,
-            'procurement_code'  =>  Procurement::where('id', $request->procurement_id)->value('code'),
+            'procurement_id'  => $procurement->id,
+            'procurement_code'  => $procurement->code,
         ];
-        return view('procurement.payment.index')->with(["procurement" => Procurement::find(1)->get(), "data" => $data]);
+        return view('procurement.payment.index')->with(["procurement" => $procurement, "data" => $data, "supplier"=> $supplier]);
     }
 
 
     public function store(StoreProcurementPaymentRequest $request){
 
        // return $request->all();
+
+
         if ($payment = Payment::create($request->all())){
+
+            //if Payment Type is ADVANCE, update advance
+            if($payment->payment_type == ProcurementPaymentType::ADVANCE){
+                $supplier = Supplier::find($request->supplier_id);
+                $available_advance = $supplier->value('advance');
+
+                //check if payment type is advance and its not more than available
+                if ($request->amount > $available_advance){
+                    return response(["success"=> false, "message" => "Insufficient advance balance!"], 200);
+                }
+
+                $updated_advance = $available_advance - $request->amount;
+                $supplier->update(['advance' => $updated_advance]);
+            }
+
 
             return response(["success"=> true, "message" => "Payment created successfully."], 200);
         }

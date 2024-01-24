@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('approvals', function (Blueprint $table) {
+        Schema::create('usages', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('procurement_id')->constrained()->onDelete('cascade');
-            $table->date('approval_date')->nullable();
-            $table->decimal('approved_price', 10, 2)->nullable();
-            $table->string('approved_by')->nullable();
-            $table->boolean('status')->default(false);
+            $table->foreignId('parts_id')->constrained()->onDelete('cascade');
+
+            $table->date('usage_date');
+            $table->decimal('quantity',6,2);
+            $table->string('collected_by');
             $table->text('note')->nullable();
+
             $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('approvals');
+        Schema::dropIfExists('usages');
     }
 };

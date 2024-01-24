@@ -26,6 +26,7 @@ class SupplierSeeder extends Seeder
                 'email'     => 'aliyu@paddyseller.com',
                 'bank_name' => 'First Bank Plc',
                 'bank_account'     => '3102323232',
+                'advance'   =>  25000000,
                 'note'     => 'Prime grower',
                 'user_id'     => 1,
             ]);
@@ -39,7 +40,23 @@ class SupplierSeeder extends Seeder
                 'email'     => 'ishbarde@gmail.com',
                 'bank_name' => 'Guaranty Bank Plc',
                 'bank_account'     => '0022232453',
+                'advance'   =>  0,
                 'note'     => 'Farmer',
+                'user_id'     => 1,
+            ]);
+
+
+        $user = Supplier::create(
+            [
+                'count_id'  => 3,
+                'code'      => 'SU-0003',
+                'name'      => 'Mallam Maishinkafa',
+                'phone'     => '080913245142',
+                'email'     => '',
+                'bank_name' => 'Polaris Bank',
+                'bank_account'     => '1023432109',
+                'advance'   =>  0,
+                'note'     => 'Premium Grower',
                 'user_id'     => 1,
             ]);
     }

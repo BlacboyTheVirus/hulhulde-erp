@@ -15,14 +15,13 @@ class Supplier extends Model
     protected $fillable = [
         'count_id',
         'code',
-        'supplier_id',
-        'item_id',
-        'procurement_date',
-        'expected_weight',
-        'expected_bags',
-        'location',
+        'name',
+        'phone',
+        'email',
+        'bank_name',
+        'bank_account',
+        'advance',
         'note',
-        'status',
         'user_id',
     ];
 

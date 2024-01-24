@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('bank_name')->nullable();
             $table->string('bank_account')->nullable();
+            $table->decimal('advance',20,2)->default(0.00);
             $table->text('note')->nullable();
 
             $table->foreignId('user_id')->constrained();

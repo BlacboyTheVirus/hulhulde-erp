@@ -41,7 +41,7 @@
                                     <th class="exportable">Item</th>
                                     <th class="exportable">Date</th>
                                     <th class="exportable">Bags</th>
-                                    <th class="exportable">Weight (ton)</th>
+{{--                                    <th class="exportable">Weight (ton)</th>--}}
                                     <th class="exportable">Location</th>
                                     <th class="exportable">Status</th>
                                     <th>Action</th>
@@ -50,7 +50,15 @@
 
                                 <tfoot>
                                 <tr>
-                                    <th colspan="9" ></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+
                                 </tr>
                                 </tfoot>
                             </table>
@@ -83,7 +91,7 @@
                     {data:'input', name:'input.name'},
                     {data:'procurement_date', name:'procurement_date'},
                     {data:'expected_bags', name:'expected_bags'},
-                    {data:'expected_weight', name:'expected_weight'},
+                    // {data:'expected_weight', name:'expected_weight'},
                     {data:'location', name:'location'},
                     {data:'status', name:'status'},
                     {data:'action', name:'action', bSortable:false, className:"text-center"},
@@ -102,6 +110,32 @@
                     $(this).DataTable().buttons().container()
                         .appendTo( ('#top'));
                 },
+
+
+                drawCallback: function (json) {
+                    var api = this.api();
+                    var sum = 0;
+                    var formated = 0;
+                    //to show first th
+                    $(api.column(3).footer()).html('Total');
+
+                    sum = api.column(4, {page:'current'}).data().sum();
+                    //to format this sum
+                    unformated = parseFloat(sum).toLocaleString(undefined, {minimumFractionDigits:0});
+                    formated = parseFloat(sum).toLocaleString(undefined, {minimumFractionDigits:0});
+                    $(api.column(4).footer()).html(formated);
+
+
+
+
+                    // $('#invoice_amount').html(unformated);
+
+                    // $('#invoice_count').html(table.data().count())
+
+
+
+                },
+
             });
 
 

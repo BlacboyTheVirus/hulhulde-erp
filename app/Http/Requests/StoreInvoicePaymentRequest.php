@@ -30,7 +30,7 @@ class StoreInvoicePaymentRequest extends FormRequest
             'invoice_id'        =>  'required|exists:invoices,id',
             'payment_date'      =>  'required|date_format:d-m-Y',
             'payment_type'      =>  'required|string',
-            'amount'            =>  'required|numeric',
+            'amount'            =>  'required|numeric|min:0|not_in:0',
             'user_id'           =>  'required|exists:users,id',
         ];
     }
