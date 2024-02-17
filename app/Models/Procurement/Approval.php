@@ -16,6 +16,7 @@ class Approval extends Model
         'procurement_id',
         'approval_date',
         'approved_by',
+        'approved_price',
         'status',
         'note',
         'user_id',

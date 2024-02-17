@@ -12,11 +12,12 @@ class Parts extends Model
 
     protected $fillable = [
         'count_id',
+        'code',
+        'name',
         'description',
         'unit',
         'quantity',
         'restock_level',
-        'note',
         'user_id',
     ];
 

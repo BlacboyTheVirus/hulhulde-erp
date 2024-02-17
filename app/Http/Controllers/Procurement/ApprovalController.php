@@ -11,7 +11,10 @@ class ApprovalController extends Controller
 {
     public function edit(Approval $approval)
     {
-        $price = Quality::where('procurement_id', '=', $approval->id)->value('recommended_price');
+        $rec_price = Quality::where('procurement_id', '=', $approval->id)->value('recommended_price');
+
+        $price = ($approval->approved_price ? $approval->approved_price : $rec_price );
+
         $new_array =  $approval->toArray();
         $new_approval = array_merge($new_array, ['price' => $price]);
         return $new_approval;

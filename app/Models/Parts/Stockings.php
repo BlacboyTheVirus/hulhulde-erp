@@ -22,7 +22,7 @@ class Stockings extends Model
         'user_id',
     ];
 
-    public function stockings():BelongsTo{
+    public function parts():BelongsTo{
         return $this->belongsTo(Parts::class);
     }
 

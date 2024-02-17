@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Payments  | Dashboard')
+@section('title', 'Parts  | Dashboard')
 
 @section('content_header')
     <h1>Enter Details for New Parts {{$data['new_code']}}</h1>
@@ -25,43 +25,42 @@
                             </div>
                         </div>
 
-                        <input type="hidden" id="count_id" name="count_id" value={{$data['count_id']}}>
-                        <input type="hidden" id="code" name="code" value="{{$data['new_code']}}">
-
+                        <input type="hidden" value="{{ $data['count_id']}}" name="count_id" >
+                        <input type="hidden" value="{{ $data['new_code']}}" name="code" >
 
                         <div class="card-body">
-                            <div class="form-group">
-                                <label>Payment Date</label>
-                                <div class="input-group date" id="payment_date" data-target-input="nearest">
-                                    <input type="text" class="form-control " name="payment_date" id="payment_date"
-                                           placeholder="Payment  Date" value="" readonly required>
-                                    <div class="input-group-append" data-target="#payment_date"
-                                         data-toggle="datetimepicker">
-                                        <div class="input-group-text"><i class="fa fa-calendar-alt"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-
-{{--                            <div class="form-group">--}}
-{{--                                <label for="payment_type" class="form-label">Payment Type</label>--}}
-{{--                                <select class="form-control select2" id="payment_type" data-placeholder="Payment Type"--}}
-{{--                                        name="payment_type">--}}
-{{--                                    <option value="">--Select Payment Type--</option>--}}
-{{--                                    @foreach(\App\Enums\InvoicePaymentType::getValues() as $payment_type)--}}
-{{--                                        @if( ($payment_type == \App\Enums\InvoicePaymentType::WALLET) && ($invoice->customer->wallet == 0) )--}}
-
-{{--                                        @else--}}
-{{--                                            <option value="{{$payment_type}}">{{ucfirst($payment_type)}}</option>--}}
-{{--                                        @endif--}}
-{{--                                    @endforeach--}}
-{{--                                </select>--}}
-{{--                            </div>--}}
 
                             <div class="form-group">
-                                <label for="amount" class="form-label">Amount <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" name="amount" id="amount"
-                                       placeholder="Enter amount">
+                                <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="name" id="name"
+                                       placeholder="Enter Part Name">
                             </div>
+
+                            <div class="form-group">
+                                <label for="description" class="form-label">Description </label>
+                                <input type="text" class="form-control" name="description" id="description"
+                                       placeholder="Enter Description">
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="quantity" class="form-label">Initial Quantity <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" name="quantity" id="quantity"
+                                       placeholder="Enter Initial Qunatity" min="0" value="0">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="unit" class="form-label">Unit <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="unit" id="unit"
+                                       placeholder="Pieces, Ltrs, Bags, Kg, Dozens etc)">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="restock_level" class="form-label">Restock Level <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" name="restock_level" id="restock_level"
+                                       placeholder="Enter Initial Qunatity" min="1" value="1">
+                            </div>
+
                             <div class="form-group">
                                 <label for="note">Remarks</label>
                                 <textarea class="form-control form-control-border" id="note" name="note"
@@ -132,9 +131,7 @@
 
 @section('js')
     <script>
-        $(function () {
-            $('#payment_type').select2();
-        });
+
 
         $.ajaxSetup({
             headers: {
@@ -147,27 +144,26 @@
             //validate
             var formvalidator = $('#newform').validate({
                 rules: {
-                    payment_type: {
+                    name: {
                         required: true,
                     },
-                    amount: {
-                        required: true,
-                        number: true
-                    },
-                    note: {
+                    unit: {
                         required: true,
                     },
+                    quantity: {
+                        required: true,
+                        number: true,
+
+                    },
+                    restock_level: {
+                        required: true,
+                        number: true,
+
+                    },
+
                 },
                 messages: {
-                    payment_type: {
-                        required: "Please select a payment type."
-                    },
-                    amount: {
-                        required: "Please enter a valid amount."
-                    },
-                    note: {
-                        required: "Please further details concerning this payment."
-                    },
+
                 },
                 errorElement: 'span',
                 errorPlacement: function (error, element) {
@@ -189,11 +185,6 @@
 
 
                 if (!formvalidator.form()) {
-                    return false;
-                }
-
-                if (($('#payment_type').val() === 'advance') && ($('#amount').val() > $('#wallet').val())) {
-                    sweetToast('', 'Sorry, Insufficient Wallet Balance.', 'error', true);
                     return false;
                 }
 
@@ -245,25 +236,25 @@
                 ],
                 order: [[0, "asc"]],
 
-                drawCallback: function (json) {
-                    var api = this.api();
-                    var sum = 0;
-                    var formated = 0;
-                    //to show first th
-                    $(api.column(0).footer()).html('Total');
-
-                    sum = api.column(1, {page: 'current'}).data().sum();
-                    //to format this sum
-                    unformated = parseFloat(sum).toLocaleString(undefined, {minimumFractionDigits: 0});
-                    formated = parseFloat(sum).toLocaleString(undefined, {minimumFractionDigits: 2});
-                    $(api.column(1).footer()).html('₦ ' + formated);
-
-                    // $('#invoice_amount').html(unformated);
-
-                    // $('#invoice_count').html(table.data().count())
-
-
-                },
+                // drawCallback: function (json) {
+                //     var api = this.api();
+                //     var sum = 0;
+                //     var formated = 0;
+                //     //to show first th
+                //     $(api.column(0).footer()).html('Total');
+                //
+                //     sum = api.column(1, {page: 'current'}).data().sum();
+                //     //to format this sum
+                //     unformated = parseFloat(sum).toLocaleString(undefined, {minimumFractionDigits: 0});
+                //     formated = parseFloat(sum).toLocaleString(undefined, {minimumFractionDigits: 2});
+                //     $(api.column(1).footer()).html('₦ ' + formated);
+                //
+                //     // $('#invoice_amount').html(unformated);
+                //
+                //     // $('#invoice_count').html(table.data().count())
+                //
+                //
+                // },
             });
 
 
@@ -298,13 +289,7 @@
                 document.querySelector('.select2-search__field').focus();
             });
 
-            //Date picker
-            $('#payment_date').datepicker({
-                format: "dd-mm-yyyy",
-                toggleActive: false,
-                autoclose: true,
-                todayHighlight: true
-            }).datepicker("setDate", new Date());
+
 
         }); // end document ready
 

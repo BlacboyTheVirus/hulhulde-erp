@@ -82,12 +82,12 @@
                         <div class="col-sm-3 invoice-col">
                             <address class="text-md">
                                 <br>Total:
-                                <b>₦ {{$procurement->quality && $procurement->warehouse ?  number_format($procurement->warehouse->weight * $procurement->quality->recommended_price,0, '.', ',') : 0.00 }}</b><br>
+                                <b>₦ {{ number_format($weight * $price,0, '.', ',')  }}</b><br>
                                 Paid:
                                 <b>₦ {{ number_format($procurement->payments->sum('amount'), 0,'.',',')}}</b><br>
 
                                 Balance:
-                                <b>₦ {{ number_format( ( ($procurement->quality && $procurement->warehouse ?  ($procurement->warehouse->weight * $procurement->quality->recommended_price) : 0.00) - $procurement->payments->sum('amount')), 0,'.',',')}}</b><br>
+                                <b>₦ {{ number_format($weight * $price - $procurement->payments->sum('amount'), 0,'.',',')}}</b><br>
 
 
                             </address>
@@ -306,14 +306,23 @@
                                                 <td>{{$procurement->warehouse ? $procurement->warehouse->weight : $procurement->expected_weight }} tons</td>
                                             </tr>
 
-                                            <tr>
-                                                <th>Recommended Price</th>
-                                                <td>₦ {{ $procurement->quality ? number_format($procurement->quality->recommended_price,0, '.', ',') : 0.00}}</td>
-                                            </tr>
+                                            @if($procurement->approval->approved_price)
+                                                <tr>
+                                                    <th>Approved Price</th>
+                                                    <td>₦ {{  number_format($price,0, '.', ',')}}</td>
+                                                </tr>
+                                            @else
+                                                <tr>
+                                                    <th>Recommended Price</th>
+                                                    <td>₦ {{  number_format($price,0, '.', ',') }}</td>
+                                                </tr>
+                                            @endif
+
+
 
                                             <tr>
                                                 <th>Amount Due</th>
-                                                <td>₦ {{$procurement->quality && $procurement->warehouse ?  number_format($procurement->warehouse->weight * $procurement->quality->recommended_price,0, '.', ',') : 0.00 }}</td>
+                                                <td>₦ {{ number_format($weight * $price,0, '.', ',')  }}</td>
                                             </tr>
 
 

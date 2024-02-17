@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('bags');
             $table->decimal('weight', 6,2);
             $table->string('received_by');
-            $table->text('note');
+            $table->text('note')->nullable();
 
             $table->foreignId('user_id')->constrained();
             $table->timestamps();

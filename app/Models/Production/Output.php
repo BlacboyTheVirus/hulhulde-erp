@@ -19,6 +19,7 @@ class Output extends Model
     protected $fillable = [
         'production_id',
         'production_date',
+        'shift',
         'product_id',
         'weight',
         'bags',

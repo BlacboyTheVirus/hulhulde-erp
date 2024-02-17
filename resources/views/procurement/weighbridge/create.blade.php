@@ -22,7 +22,7 @@
                         <div class="card-body">
 
                             <div class="row mb-3">
-                                <div class="col-md-3 col-sm-3 border-right">
+                                <div class="col-md-4 col-sm-4 border-right">
                                     <div class="description-block">
                                         <span class="description-text">PROCUREMENT CODE</span>
                                         <h5 class="description-header">{{$data['procurement_code']}}</h5>
@@ -31,7 +31,7 @@
 
                                 </div>
 
-                                <div class="col-md-3 col-sm-3 border-right">
+                                <div class="col-md-4 col-sm-4 border-right">
                                     <div class="description-block">
                                         <span class="description-text">SUPPLIER</span>
                                         <h5 class="description-header">{{$data['supplier']}}</h5>
@@ -40,7 +40,7 @@
 
                                 </div>
 
-                                <div class="col-md-3 col-sm-3 border-right">
+                                <div class="col-md-4 col-sm-4 ">
                                     <div class="description-block">
                                         <span class="description-text">EXP. BAGS</span>
                                         <h5 class="description-header">{{$data['expected_bags']}}</h5>
@@ -51,13 +51,13 @@
 
 
 
-                                <div class="col-md-3 col-sm-3 hidden">
-                                    <div class="description-block">
-                                        <span class="description-text">EXP. WEIGHT (tons)</span>
-                                        <h5 class="description-header" id="exp_weight">{{$data['expected_weight']}}</h5>
-                                    </div>
+{{--                                <div class="col-md-3 col-sm-3 hidden">--}}
+{{--                                    <div class="description-block">--}}
+{{--                                        <span class="description-text">EXP. WEIGHT (tons)</span>--}}
+{{--                                        <h5 class="description-header" id="exp_weight">{{$data['expected_weight']}}</h5>--}}
+{{--                                    </div>--}}
 
-                                </div>
+{{--                                </div>--}}
 
                             </div>
 
@@ -166,9 +166,9 @@
     <script>
         $(document).ready(function(){
 
-            $.validator.addMethod("validFirstWeight", function(value, element) {
-                return this.optional(element) || value > parseFloat($('#exp_weight').html());
-            }, "Must be greater than expected weight");
+            $.validator.addMethod("validSecondWeight", function(value, element) {
+                return this.optional(element) || value < parseFloat($('#first_weight').val());
+            }, "Must be less than first weight");
 
             //VALIDATE FORM
             var formvalidator = $('#newform').validate({
@@ -182,8 +182,15 @@
                     },
                     first_weight: {
                         required: true,
-                        validFirstWeight: true
+
                     },
+
+                    second_weight: {
+                        required: true,
+                        validSecondWeight: true
+                    },
+
+
                     weight: {
                         required: true,
                         number: true
@@ -263,7 +270,7 @@
 
 
         $("#first_weight").on("input", function(){
-            $("#second_weight").val( ($('#first_weight').val() - $('#exp_weight').text()).toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 }) );
+            // $("#second_weight").val( ($('#first_weight').val() - $('#exp_weight').text()).toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 }) );
             $("#weight").val($('#first_weight').val() - $('#second_weight').val());
         });
 

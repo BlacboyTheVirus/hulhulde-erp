@@ -56,6 +56,7 @@ class OutputController extends Controller
         foreach ($request->output_id as $key => $value) {
             $output_items[$key]['production_id'] = $request->production_id;
             $output_items[$key]['production_date'] = $request->production_date;
+            $output_items[$key]['shift'] = $request->shift;
             $output_items[$key]['product_id'] = $request->output_id[$key];
             $output_items[$key]['bags'] = $request->bags[$key];
             $output_items[$key]['weight'] = $request->weight[$key];
@@ -120,9 +121,9 @@ class OutputController extends Controller
             ->addColumn('action', function($row){
                 $action = "";
 
-                if ($row->next == ProductionNext::OUTPUT && (count($row->outputs) == 0) ) { // If Warehouse is next & warehouse info not  added
+//                if ($row->next == ProductionNext::OUTPUT && (count($row->outputs) == 0) ) { // If Warehouse is next & warehouse info not  added
                     $action .= "<a class='btn btn-xs btn-success' href='" . route('production.output.create', ['id' => $row->id]) . "'><i class='fas fa-box-open'></i></a> ";
-                }
+//                }
 
                 if (count($row->outputs) > 0){ // If quality info has been added
                     if(Auth::user()->can('users.show')){

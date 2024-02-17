@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('production_id')->constrained()->onDelete('cascade');
             $table->date('production_date');
+            $table->string('shift');
+
 
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->decimal('weight', 6,2);

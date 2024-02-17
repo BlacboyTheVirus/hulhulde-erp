@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('description');
             $table->string('unit',);
             $table->decimal('quantity',6,2)->default(0.00);
-            $table->decimal('restock_level',6,3);
+            $table->decimal('restock_level',6,2);
             $table->enum('status', [0, 1])->default(1);
 
             $table->text('note')->nullable();

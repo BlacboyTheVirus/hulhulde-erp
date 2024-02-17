@@ -126,9 +126,9 @@ class StoreController extends Controller
             ->addColumn('action', function($row){
                 $action = "";
 
-                if ($row->next == ProductionNext::STORE && (count($row->stores) == 0 ) ) { // If Warehouse is next & warehouse info not  added
+//                if ($row->next == ProductionNext::STORE && (count($row->stores) == 0 ) ) { // If Warehouse is next & warehouse info not  added
                     $action .= "<a class='btn btn-xs btn-success' href='" . route('production.store.create', ['id' => $row->id]) . "'><i class='fas fa-store'></i></a> ";
-                }
+//                }
 
                 if (count($row->stores) > 0 ){ // If quality info has been added
                     if(Auth::user()->can('users.show')){

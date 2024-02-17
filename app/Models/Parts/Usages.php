@@ -14,19 +14,19 @@ class Usages extends Model
 
     protected $fillable = [
         'parts_id',
-        'date',
+        'usage_date',
         'quantity',
         'collected_by',
         'note',
         'user_id',
     ];
 
-    public function usages():BelongsTo{
+    public function parts():BelongsTo{
         return $this->belongsTo(Parts::class);
     }
 
 
-    protected function collectedDate(): Attribute
+    protected function usageDate(): Attribute
     {
         return Attribute::make(
             get: fn (string $value) => Carbon::parse($value)->format('d-m-Y'),

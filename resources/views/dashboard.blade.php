@@ -16,16 +16,16 @@
                         <div class="row">
                             <div class="col-md-12 ">&nbsp;</div>
 
-                            <div class="card-tools">
-                                <div class="btn-group ">
-                                    <button type="button" class="btn btn-info get_tab_records" period="today">Today</button>
-                                    <button type="button" class="btn btn-info get_tab_records" period="week">This Week</button>
-                                    <button type="button" class="btn btn-info get_tab_records" period="month">This Month</button>
-                                    <button type="button" class="btn btn-info get_tab_records" period="year">This Year</button>
-                                    <button type="button" class="btn btn-info get_tab_records active" period="all">All</button>
-                                </div>
+{{--                            <div class="card-tools">--}}
+{{--                                <div class="btn-group ">--}}
+{{--                                    <button type="button" class="btn btn-info get_tab_records" period="today">Today</button>--}}
+{{--                                    <button type="button" class="btn btn-info get_tab_records" period="week">This Week</button>--}}
+{{--                                    <button type="button" class="btn btn-info get_tab_records" period="month">This Month</button>--}}
+{{--                                    <button type="button" class="btn btn-info get_tab_records" period="year">This Year</button>--}}
+{{--                                    <button type="button" class="btn btn-info get_tab_records active" period="all">All</button>--}}
+{{--                                </div>--}}
 
-                            </div>
+{{--                            </div>--}}
 
                         </div>
                     </div>
@@ -37,6 +37,7 @@
 
                     <div class="row">
 
+                        @role('superuser')
                         <div class="col-lg-3 col-6">
                             <div class="small-box bg-info">
                                 <div class="inner">
@@ -54,6 +55,7 @@
                                 </a>
                             </div>
                         </div>
+                        @endrole
 
                         <div class="col-lg-3 col-6">
                             <div class="small-box bg-success">
@@ -79,7 +81,7 @@
                                     <h3 class="font-weight-bold">
                                         <sup style="font-size: 20px">₦</sup>
                                         <span id="procurements">{{number_format($payments,0,'.',',')}}</span></h3>
-                                    <p>Total Payments</p>
+                                    <p>Procurement Payments</p>
                                 </div>
                                 <div class="icon">
                                     <i class="fa fa-money-bill-wave-alt"></i>
@@ -91,7 +93,7 @@
                         </div>
 
                         <div class="col-lg-3 col-6">
-                            <div class="small-box bg-orange">
+                            <div class="small-box bg-pink">
                                 <div class="inner">
                                     <h3 class="font-weight-bold">
                                         <span id="available_paddy">{{ $paddy_quantity }}</span></h3>
@@ -100,7 +102,7 @@
                                 <div class="icon">
                                     <i class="fa fa-money-bill-wave-alt"></i>
                                 </div>
-                                <a href="{{route('procurement.index')}}" class="small-box-footer">
+                                <a href="{{route('procurement.warehouse.index')}}" class="small-box-footer">
                                     More info <i class="fas fa-arrow-circle-right"></i>
                                 </a>
                             </div>
@@ -122,7 +124,7 @@
                                 <div class="icon">
                                     <i class="fa fa-shopping-cart"></i>
                                 </div>
-                                <a href="{{route('procurement.warehouse.index')}}" class="small-box-footer">
+                                <a href="{{route('production.index')}}" class="small-box-footer">
                                     More info <i class="fas fa-arrow-circle-right"></i>
                                 </a>
                             </div>

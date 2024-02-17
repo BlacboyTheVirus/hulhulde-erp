@@ -75,6 +75,20 @@
                                 </div>
                             </div>
 
+
+
+                            <div class="form-group">
+                                <label for="payment_type" class="form-label">Shift</label>
+                                <select class="form-control select2" id="shift" data-placeholder="Select Production Shift"
+                                        name="shift">
+                                    <option value="">--Select Shift--</option>
+                                        @foreach(\App\Enums\ProductionShiftType::getValues() as $shift_type)
+                                         <option value="{{$shift_type}}">{{ucfirst($shift_type)}}</option>
+                                        @endforeach
+                                </select>
+                            </div>
+
+
                             <label style="font-weight: bold; margin-bottom: 0rem !important;">No. of Bags</label>
 
                             <div id="output-items" >
@@ -103,6 +117,9 @@
 
     <script>
 
+        $(function () {
+            $('#shift').select2();
+        });
 
         $(document).ready(function(){
 

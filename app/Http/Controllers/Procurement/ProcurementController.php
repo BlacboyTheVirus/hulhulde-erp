@@ -76,7 +76,22 @@ class ProcurementController extends Controller
      */
     public function show(Procurement $procurement)
     {
-       return view('procurement.show')->with(['procurement'=>$procurement]);
+       if ($procurement->approval->approved_price){
+           $price = $procurement->approval->approved_price;
+       } elseif ($procurement->quality) {
+           $price = $procurement->quality->recommended_price;
+       } else{
+           $price = 0;
+       }
+
+        if ($procurement->warehouse){
+            $weight = $procurement->warehouse->weight;
+        } else{
+            $weight = 0;
+        }
+
+
+       return view('procurement.show')->with(['procurement'=>$procurement, 'price'=> $price, 'weight'=>$weight]);
     }
 
     /**
